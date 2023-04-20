@@ -3254,6 +3254,83 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342142482}
   m_CullTransparentMesh: 1
+--- !u!1001 &1372236707
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.165674
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.7795709
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.0405054
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.47000554
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.6412833
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.29487336
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.2878055
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.64591897
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.6426558
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -89.369
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90.451
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 40.886
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 86c82ad8b1d43e84997ec3216e48ec8f, type: 2}
+    - target: {fileID: 919132149155446097, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
+      propertyPath: m_Name
+      value: 3ds file
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fbee0834b51776d4795be33402d6fd40, type: 3}
 --- !u!1 &1402367800
 GameObject:
   m_ObjectHideFlags: 0
@@ -4295,7 +4372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8616848253eedd545ab3b20312d65d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  go: {fileID: 8339342039312447564, guid: db1945601db844a4cb8d4db3eeb85f50, type: 3}
+  go: {fileID: 3711697915795479555, guid: 0e79c5020c1266943b7d263d89f009e0, type: 3}
   spawnDelay: 1
   spawnCol: 3
 --- !u!4 &2127496332

@@ -26,12 +26,12 @@ public class SpawnerScript : MonoBehaviour
             
             for (int i = 0; i < spawnCol; i++) {
                 randomX = Random.Range(-width/2, width/2);
-                //float rotateEgg = Random.Range(0.0f, 360.0f);
-                float rotateEgg = 180f;
+                float rotateEgg = Random.Range(0.0f, 360.0f);
+                //float rotateEgg = 180f;
                 whereToSpawn = new Vector3(randomX, 2.0f, -7f);
                 GameObject Enemy = Instantiate(go, whereToSpawn, Quaternion.identity);
-                Enemy.transform.Rotate(0.0f, rotateEgg,0.0f);
-                Enemy.transform.localScale=new Vector3(0.021f, 0.021f, 0.03f);//0.021
+                Enemy.transform.Rotate(0.0f, rotateEgg,90f);
+                Enemy.transform.localScale=new Vector3(0.015f, 0.015f, 0.015f);//0.021
 
             }
         }
