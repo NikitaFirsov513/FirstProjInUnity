@@ -20,12 +20,12 @@ public class SpawnerScript : MonoBehaviour
     void Update()
     {
         float width = ConvWidthScript.getWidth();
-        if (Time.time > nextSpawn) {
+        if (Time.time > nextSpawn&&GlobalVar.GetIsSpawn()) {
 
             nextSpawn = Time.time + spawnDelay;
-            
+            CalcEgg.addEggSpawnCol(spawnCol);
             for (int i = 0; i < spawnCol; i++) {
-                randomX = Random.Range(-width/2, width/2);
+                randomX = Random.Range(-(width-0.1f)/2, (width - 0.1f)/ 2) ;
                 float rotateEgg = Random.Range(0.0f, 360.0f);
                 //float rotateEgg = 180f;
                 whereToSpawn = new Vector3(randomX, 2.0f, -7f);

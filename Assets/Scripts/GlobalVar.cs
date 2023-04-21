@@ -8,6 +8,16 @@ public class GlobalVar : MonoBehaviour
 
     private static float sensorUpdateDelay = 0.04f;
 
+    private static bool isSpawn = true;
+
+    public static void ToggleIsSpawn() {
+        isSpawn = !isSpawn;    
+    }
+    public static bool GetIsSpawn()
+    {
+       return isSpawn;
+    }
+
     public static float getSensorUpdateDelay()
     {
         return sensorUpdateDelay;

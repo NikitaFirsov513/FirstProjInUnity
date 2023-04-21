@@ -6,7 +6,9 @@ using UnityEngine.UI;
 
 public class TextColEgg : MonoBehaviour
 {
-    public Text textField;
+    public Text textField; 
+    public Text textEggSpawnCol;
+
     void Start()
     {
         RefreshTextField();
@@ -21,5 +23,6 @@ public class TextColEgg : MonoBehaviour
     public void RefreshTextField()
     {
         textField.text = CalcEgg.getSum().ToString();
+        textEggSpawnCol.text = CalcEgg.getEggSpawnCol().ToString();
     }
 }

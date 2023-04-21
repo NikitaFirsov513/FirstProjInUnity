@@ -9,6 +9,19 @@ public class CalcEgg : MonoBehaviour
     
     
     private static int sum=0;
+    private static int eggSpawnCol = 0;
+
+
+    public static int getEggSpawnCol()
+    {
+        return eggSpawnCol;
+    }
+
+    public static void addEggSpawnCol(int col)
+    {
+        eggSpawnCol += col;
+    }
+
     public static int getSum()
     {
         return sum;
