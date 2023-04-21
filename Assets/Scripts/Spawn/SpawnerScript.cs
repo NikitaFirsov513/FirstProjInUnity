@@ -31,7 +31,7 @@ public class SpawnerScript : MonoBehaviour
                 whereToSpawn = new Vector3(randomX, 2.0f, -7f);
                 GameObject Enemy = Instantiate(go, whereToSpawn, Quaternion.identity);
                 Enemy.transform.Rotate(0.0f, rotateEgg,90f);
-                Enemy.transform.localScale=new Vector3(0.015f, 0.015f, 0.015f);//0.021
+                Enemy.transform.localScale=new Vector3(0.0105f, 0.0105f, 0.0105f);//0.021
 
             }
         }

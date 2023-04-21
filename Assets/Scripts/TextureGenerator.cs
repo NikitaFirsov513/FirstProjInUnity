@@ -26,10 +26,13 @@ public class TextureGenerator : MonoBehaviour
             {
                 float value = heightMap[x][y];
 
-                if (value != 1.45f)
-                    pixels[x + y * width] = Color.black;
+                if (value == 1.45f)
+                    value = 0;
                 else
-                    pixels[x + y * width] = Color.white;
+                    value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
+
+
+                pixels[x + y * width] = new Color(value, value, value);
 
 
 
@@ -81,40 +84,20 @@ public class TextureGenerator : MonoBehaviour
 
                 if (y > 200 || y > heightMap[0].Count - 1) break;
 
-                //float value = heightMap[width - x][height - y];
                 float value = heightMap[width - x][height - y];
-                float nowWidth = width - x;
-                float nowHeight = height - y;
 
                 if (value == 1.45f)
                     value = 0;
                 else
-                {
-                    //value = ((1.45f - value) * 1000) - 41.979551154f;
                     value = (((1.45f - value) * 1000) - 21f) / 0.003f / 10000;
-                    //Debug.Log("-----------------------------------------------");
 
-                    //Debug.Log("Датчик>  "+ nowWidth + " Итерация>  "+ nowHeight);
-                    ////Debug.Log("Значение>  " + value);
-                    ////Debug.Log("Высота>  " + (1.45f - value));
-                    //Debug.Log("Цвет>  " + value);
 
-                    //Debug.Log("-----------------------------------------------");
-
-                }
-
-                //value = (((1.45f - value) * 1000000) - 41960.36f+34.09461f)/100;
-                //value = ((1.45f - value) * 1000);
-                //else
-                //    pixels[x + y * width] = Color.white;
-                //if (value != 0)
-                //Debug.Log(value);
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
 
 
-       
+
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
