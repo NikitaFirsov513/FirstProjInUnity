@@ -30,13 +30,8 @@ public class TextureGenerator : MonoBehaviour
                     value = 0;
                 else
                     value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
-
-
+                
                 pixels[x + y * width] = new Color(value, value, value);
-
-
-
-                //pixels[x + y * width] = Color.Lerp(Color.black, Color.white, value);
             }
         }
 
@@ -45,9 +40,17 @@ public class TextureGenerator : MonoBehaviour
         texture.Apply();
 
 
+        //start fint egg count
+
         SaveToPng(texture);
 
         return texture;
+    }
+    public static void FindEggCout(List<List<float>> heightMap) {
+    
+        
+    
+    
     }
     public static void SaveToPng(Texture2D texture)
     {
