@@ -25,27 +25,27 @@ public class HeightMap : MonoBehaviour
 
     public static void CheckSensors()
     {
-        
-        int sensorCount = heightMap[0].Count - 1;
-        for (int i = 1; i < heightMap.Count; i++)
-        {
 
-            if (heightMap[i][sensorCount] == 1.45f) continue;
+        //int sensorCount = heightMap[0].Count - 1;
+        //for (int i = 1; i < heightMap.Count; i++)
+        //{
 
-            bool one = heightMap[i - 1][sensorCount] == 1.45f;
-            bool two = heightMap[i - 1][sensorCount - 1] == 1.45f;
-            bool three = heightMap[i][sensorCount - 1] == 1.45f;
-            bool four = heightMap[i + 1][sensorCount - 1] == 1.45f;
+        //    if (heightMap[i][sensorCount] == 1.45f) continue;
 
-            if (one &&
-                two &&
-                three &&
-                four)
-                CalcEgg.addSum();
+        //    bool one = heightMap[i - 1][sensorCount] == 1.45f;
+        //    bool two = heightMap[i - 1][sensorCount - 1] == 1.45f;
+        //    bool three = heightMap[i][sensorCount - 1] == 1.45f;
+        //    bool four = heightMap[i + 1][sensorCount - 1] == 1.45f;
 
-        }
+        //    if (one &&
+        //        two &&
+        //        three &&
+        //        four)
+        //        CalcEgg.addSum();
+
+        //}
         TextureGenerator.UpdateImage(heightMap);
-         }
+    }
 
 
     private static bool CheckZone(int i, int sensorCount)

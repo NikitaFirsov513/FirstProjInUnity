@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,10 +31,11 @@ public class TextureGenerator : MonoBehaviour
                     value = 0;
                 else
                     value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
-                
+
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
+        FindEggCout(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -41,17 +43,269 @@ public class TextureGenerator : MonoBehaviour
 
 
         //start fint egg count
-
         SaveToPng(texture);
 
         return texture;
     }
-    public static void FindEggCout(List<List<float>> heightMap) {
-    
-        
-    
-    
+    public static void FindEggCout(List<List<float>> heightMap, Color[] pixels)
+    {
+
+        //перебор масива
+        //если левый верхний, то идем по контуру
+        //что обходим красим в красное
+        //если дошли до начальной точки, то делаем заново
+        int width = heightMap.Count - 1;
+        int height = heightMap[0].Count - 1;
+        int count = 0;
+        var findPix = new Dictionary<string, bool>();
+
+
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 1; x < width; x++)
+            {
+
+
+                if (heightMap[x][y] == 1.45f)
+                    continue;
+
+                if (heightMap[x - 1][y] == 1.45f &&
+                    heightMap[x - 1][y - 1] == 1.45f &&
+                    heightMap[x][y - 1] == 1.45f &&
+                    heightMap[x + 1][y - 1] == 1.45f &&
+                    heightMap[x + 2][y - 1] == 1.45f)
+                {
+                    //Debug.Log("--------------------------------");
+                    //Debug.Log(heightMap[x - 1][y] + "==1.45f");
+                    //Debug.Log(heightMap[x - 1][y - 1] + "==1.45f");
+                    //Debug.Log(heightMap[x][y - 1] + "==1.45f");
+                    //Debug.Log(heightMap[x][y - 1] + "==1.45f");
+
+                    count++;
+                    //pixels[x + y * width] = new Color(1f, 0, 0);
+                    FindNextPix(heightMap, x, y, findPix, pixels);
+                }
+            }
+        }
+        Debug.Log("COUNT>" + count);
+
+
     }
+    public static void FindNextPix(List<List<float>> heightMap, int startX, int startY, Dictionary<string, bool> findPix, Color[] pixels)
+    {
+        int nowX = startX, nowY = startY;
+        int width = heightMap.Count - 1;
+
+        do
+        {
+
+            pixels[nowX + nowY * width] = new Color(1f, 0, 0);
+
+            //Debug.Log("-------------");
+            //Debug.Log("nowX>" + nowX);
+            //Debug.Log("nowY>" + nowY);
+            //Debug.Log("-------------");
+            bool isFind = false;
+            bool isConvFind = false;
+
+            for (int i = 1; i <= 9; i++)
+            {
+
+
+                if (isConvFind)
+                {
+                    switch (i)
+                    {
+                        case 2:
+                            if (heightMap[nowX][nowY + 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>"+i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY); 
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX += 0;
+                                nowY += 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+
+
+                            }
+                            break;
+                        case 3:
+                            if (heightMap[nowX + 1][nowY + 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX += 1;
+                                nowY += 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 4:
+                            if (heightMap[nowX + 1][nowY] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX += 1;
+                                nowY += 0;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 5:
+                            if (heightMap[nowX + 1][nowY - 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX += 1;
+                                nowY -= 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 6:
+                            if (heightMap[nowX][nowY - 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX += 0;
+                                nowY -= 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 7:
+                            if (heightMap[nowX - 1][nowY - 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX -= 1;
+                                nowY -= 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 8:
+                            if (heightMap[nowX - 1][nowY] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX -= 1;
+                                nowY -= 0;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        case 9:
+                            if (heightMap[nowX - 1][nowY + 1] != 1.45f)
+                            {
+                                Debug.Log("-------------");
+                                Debug.Log("CASE>" + i);
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("^^^^^^^^^^^^^^^");
+                                isFind = true;
+                                nowX -= 1;
+                                nowY += 1;
+                                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                                Debug.Log("-------------");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                if (!isConvFind)
+                {
+                    switch (i)
+                    {
+                        case 1:
+                            if (heightMap[nowX - 1][nowY + 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 2:
+                            if (heightMap[nowX][nowY + 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 3:
+                            if (heightMap[nowX + 1][nowY + 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 4:
+                            if (heightMap[nowX + 1][nowY] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 5:
+                            if (heightMap[nowX + 1][nowY - 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 6:
+                            if (heightMap[nowX][nowY - 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 7:
+                            if (heightMap[nowX - 1][nowY - 1] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        case 8:
+                            if (heightMap[nowX - 1][nowY] == 1.45f)
+                                isConvFind = true;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+
+                //Debug.Log("-----------------");
+                //Debug.Log("startX>" + startX + "\tstartY>" + startY);
+                //Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                //Debug.Log("i>" + i);
+                //Debug.Log("isConvFind>" + isConvFind);
+                //Debug.Log("isFind>" + isFind);
+                //Debug.Log("-----------------");
+
+                
+
+                if (isFind) {
+                    Debug.Log("ВЫШЕЛ ВОН");
+                    //Debug.Log("startX>" + startX+ "\tstartY>" + startY);
+                    //Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                    //Debug.Log("-------------");
+                    break;
+                }
+            }
+
+
+        } while (nowX != startX && nowY != startY);
+        Debug.Log("ПРОЩАЙ ЯИЧКО");
+
+
+
+
+
+    }
+
     public static void SaveToPng(Texture2D texture)
     {
         byte[] bytes = texture.EncodeToPNG();
