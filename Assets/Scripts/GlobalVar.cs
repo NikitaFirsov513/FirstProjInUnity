@@ -22,6 +22,7 @@ public class GlobalVar : MonoBehaviour
     {
         return sensorUpdateDelay;
     }
+
     public static void IncSensorUpdateDelay(float newVar)
     {
 
@@ -30,6 +31,7 @@ public class GlobalVar : MonoBehaviour
 
         //SpeedConv.setSpeedConv(sensorUpdateDelay);
     }
+
     public static void DicSensorUpdateDelay(float newVar)
     {   
         sensorUpdateDelay -= newVar;

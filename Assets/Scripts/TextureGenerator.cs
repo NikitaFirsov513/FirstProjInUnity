@@ -75,15 +75,10 @@ public class TextureGenerator : MonoBehaviour
                     heightMap[x + 1][y - 1] == 1.45f &&
                     heightMap[x + 2][y - 1] == 1.45f)
                 {
-                    //Debug.Log("--------------------------------");
-                    //Debug.Log(heightMap[x - 1][y] + "==1.45f");
-                    //Debug.Log(heightMap[x - 1][y - 1] + "==1.45f");
-                    //Debug.Log(heightMap[x][y - 1] + "==1.45f");
-                    //Debug.Log(heightMap[x][y - 1] + "==1.45f");
 
                     count++;
-                    //pixels[x + y * width] = new Color(1f, 0, 0);
                     FindNextPix(heightMap, x, y, findPix, pixels);
+
                 }
             }
         }
@@ -95,30 +90,36 @@ public class TextureGenerator : MonoBehaviour
     {
         int nowX = startX, nowY = startY;
         int width = heightMap.Count - 1;
+        bool isFind;
+        bool isConvFind;
+        int countLoop = 0;
+        //var localDict = new Dictionary<string, bool>();
+        string localCoord = "";
 
         do
         {
-
+            countLoop++;
             pixels[nowX + nowY * width] = new Color(1f, 0, 0);
-
+            isFind = false;
+            isConvFind = false;
             //Debug.Log("-------------");
             //Debug.Log("nowX>" + nowX);
             //Debug.Log("nowY>" + nowY);
             //Debug.Log("-------------");
-            bool isFind = false;
-            bool isConvFind = false;
+            //int countLoop = 0;
 
             for (int i = 1; i <= 9; i++)
             {
-
+                
 
                 if (isConvFind)
                 {
                     switch (i)
                     {
                         case 2:
-                            if (heightMap[nowX][nowY + 1] != 1.45f)
+                            if (heightMap[nowX][nowY + 1] != 1.45f && !localCoord.Contains(nowX + ":" + (nowY+1)))
                             {
+
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>"+i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY); 
@@ -133,7 +134,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 3:
-                            if (heightMap[nowX + 1][nowY + 1] != 1.45f)
+                            if (heightMap[nowX + 1][nowY + 1] != 1.45f && !localCoord.Contains((nowX+1) + ":" + (nowY + 1)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -147,7 +148,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 4:
-                            if (heightMap[nowX + 1][nowY] != 1.45f)
+                            if (heightMap[nowX + 1][nowY] != 1.45f && !localCoord.Contains((nowX+1) + ":" + (nowY)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -161,7 +162,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 5:
-                            if (heightMap[nowX + 1][nowY - 1] != 1.45f)
+                            if (heightMap[nowX + 1][nowY - 1] != 1.45f && !localCoord.Contains((nowX + 1) + ":" + (nowY - 1)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -175,7 +176,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 6:
-                            if (heightMap[nowX][nowY - 1] != 1.45f)
+                            if (heightMap[nowX][nowY - 1] != 1.45f && !localCoord.Contains((nowX) + ":" + (nowY - 1)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -189,7 +190,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 7:
-                            if (heightMap[nowX - 1][nowY - 1] != 1.45f)
+                            if (heightMap[nowX - 1][nowY - 1] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY - 1)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -203,7 +204,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 8:
-                            if (heightMap[nowX - 1][nowY] != 1.45f)
+                            if (heightMap[nowX - 1][nowY] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -217,7 +218,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 9:
-                            if (heightMap[nowX - 1][nowY + 1] != 1.45f)
+                            if (heightMap[nowX - 1][nowY + 1] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY + 1)))
                             {
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
@@ -285,19 +286,36 @@ public class TextureGenerator : MonoBehaviour
                 //Debug.Log("isFind>" + isFind);
                 //Debug.Log("-----------------");
 
-                
 
+                
+                    
                 if (isFind) {
-                    Debug.Log("¬€ÿ≈À ¬ŒÕ");
-                    //Debug.Log("startX>" + startX+ "\tstartY>" + startY);
-                    //Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
-                    //Debug.Log("-------------");
+                    localCoord += nowX + ":" + nowY+ " | ";
+                    //localDict.Add()
+                    Debug.Log("%%%%%%%%%%%");
+                    Debug.Log("FIIIIIIND");
+                    Debug.Log("startX>" + startX + "\tstartY>" + startY);
+                    Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                    Debug.Log("%%%%%%%%%%%");
+                    
                     break;
                 }
             }
 
+            if (countLoop > 500)
+            {
+                pixels[nowX + nowY * width] = new Color(0, 0, 1f);
 
-        } while (nowX != startX && nowY != startY);
+                Debug.Log("%%%%%%%%%%%");
+                Debug.Log("TOOOOOMANYYYYY--------------------------------------- - - -- - - - - - - - - - -- -  - -- - - - ");
+                Debug.Log("startX>" + startX + "\tstartY>" + startY);
+                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
+                Debug.Log("%%%%%%%%%%%");
+                break;
+            }
+
+
+        } while (nowX != startX || nowY != startY);
         Debug.Log("œ–ŒŸ¿… ﬂ»◊ Œ");
 
 
@@ -305,6 +323,7 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
+    
 
     public static void SaveToPng(Texture2D texture)
     {
