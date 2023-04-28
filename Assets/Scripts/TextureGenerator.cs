@@ -117,9 +117,12 @@ public class TextureGenerator : MonoBehaviour
                     switch (i)
                     {
                         case 2:
-                            if (heightMap[nowX][nowY + 1] != 1.45f && !localCoord.Contains(nowX + ":" + (nowY+1)))
+                            if (heightMap[nowX][nowY + 1] != 1.45f)
                             {
-
+                                if (localCoord.Contains((nowX) + ":" + (nowY + 1))) {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>"+i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY); 
@@ -134,8 +137,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 3:
-                            if (heightMap[nowX + 1][nowY + 1] != 1.45f && !localCoord.Contains((nowX+1) + ":" + (nowY + 1)))
+                            if (heightMap[nowX + 1][nowY + 1] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX + 1) + ":" + (nowY + 1)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -148,8 +156,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 4:
-                            if (heightMap[nowX + 1][nowY] != 1.45f && !localCoord.Contains((nowX+1) + ":" + (nowY)))
+                            if (heightMap[nowX + 1][nowY] != 1.45f )
                             {
+                                if (localCoord.Contains((nowX + 1) + ":" + (nowY)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -162,8 +175,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 5:
-                            if (heightMap[nowX + 1][nowY - 1] != 1.45f && !localCoord.Contains((nowX + 1) + ":" + (nowY - 1)))
+                            if (heightMap[nowX + 1][nowY - 1] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX + 1) + ":" + (nowY - 1)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -176,8 +194,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 6:
-                            if (heightMap[nowX][nowY - 1] != 1.45f && !localCoord.Contains((nowX) + ":" + (nowY - 1)))
+                            if (heightMap[nowX][nowY - 1] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX ) + ":" + (nowY - 1)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -190,8 +213,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 7:
-                            if (heightMap[nowX - 1][nowY - 1] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY - 1)))
+                            if (heightMap[nowX - 1][nowY - 1] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX - 1) + ":" + (nowY - 1)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -204,8 +232,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 8:
-                            if (heightMap[nowX - 1][nowY] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY)))
+                            if (heightMap[nowX - 1][nowY] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX - 1) + ":" + (nowY )))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
@@ -218,8 +251,13 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 9:
-                            if (heightMap[nowX - 1][nowY + 1] != 1.45f && !localCoord.Contains((nowX - 1) + ":" + (nowY + 1)))
+                            if (heightMap[nowX - 1][nowY + 1] != 1.45f)
                             {
+                                if (localCoord.Contains((nowX - 1) + ":" + (nowY + 1)))
+                                {
+                                    isConvFind = false;
+                                    break;
+                                }
                                 Debug.Log("-------------");
                                 Debug.Log("CASE>" + i);
                                 Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
