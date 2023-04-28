@@ -95,9 +95,10 @@ public class TextureGenerator : MonoBehaviour
         int countLoop = 0;
         //var localDict = new Dictionary<string, bool>();
         string localCoord = "";
-
+        int lastVector = 4;
         do
         {
+
             countLoop++;
             pixels[nowX + nowY * width] = new Color(1f, 0, 0);
             isFind = false;
@@ -108,10 +109,15 @@ public class TextureGenerator : MonoBehaviour
             //Debug.Log("-------------");
             //int countLoop = 0;
 
-            for (int i = 1; i <= 9; i++)
+            for (int j = 1; j <= 9; j++)
             {
-                
 
+                int i = lastVector + 5;
+                
+                
+                if (i > 8)
+                    i -= 8;
+                //переделать колесо векторов движений
                 if (isConvFind)
                 {
                     switch (i)
@@ -328,6 +334,7 @@ public class TextureGenerator : MonoBehaviour
                 
                     
                 if (isFind) {
+                    lastVector = j;
                     localCoord += nowX + ":" + nowY+ " | ";
                     //localDict.Add()
                     Debug.Log("%%%%%%%%%%%");
