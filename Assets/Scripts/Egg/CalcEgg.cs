@@ -36,4 +36,5 @@ public class CalcEgg : MonoBehaviour
     {
         sum += 1;
     }
+
 }

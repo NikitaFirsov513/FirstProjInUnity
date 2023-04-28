@@ -26,21 +26,21 @@ public class HeightMap : MonoBehaviour
     public static void CheckSensors()
     {
 
-        //int sensorCount = heightMap[0].Count - 1;
-        //for (int i = 1; i < heightMap.Count; i++)
+        //int sensorCount = heightMap[0].Count - 3;
+        //for (int i = 2; i < heightMap.Count-3; i++)
         //{
 
         //    if (heightMap[i][sensorCount] == 1.45f) continue;
 
-        //    bool one = heightMap[i - 1][sensorCount] == 1.45f;
-        //    bool two = heightMap[i - 1][sensorCount - 1] == 1.45f;
-        //    bool three = heightMap[i][sensorCount - 1] == 1.45f;
-        //    bool four = heightMap[i + 1][sensorCount - 1] == 1.45f;
+        //    bool left = heightMap[i - 1][sensorCount] > heightMap[i][sensorCount] && heightMap[i - 1][sensorCount] < heightMap[i - 2][sensorCount];
+        //    bool right = heightMap[i + 1][sensorCount] > heightMap[i][sensorCount] && heightMap[i + 1][sensorCount] < heightMap[i + 2][sensorCount];
+        //    bool forward = heightMap[i][sensorCount - 1] > heightMap[i][sensorCount] && heightMap[i][sensorCount - 1] < heightMap[i][sensorCount - 2];
+        //    bool back = heightMap[i][sensorCount + 1] > heightMap[i][sensorCount] && heightMap[i][sensorCount + 1] < heightMap[i][sensorCount + 2];
 
-        //    if (one &&
-        //        two &&
-        //        three &&
-        //        four)
+        //    if (left &&
+        //        right &&
+        //        forward &&
+        //        back)
         //        CalcEgg.addSum();
 
         //}
@@ -48,28 +48,28 @@ public class HeightMap : MonoBehaviour
     }
 
 
-    private static bool CheckZone(int i, int sensorCount)
-    {
+    //private static bool CheckZone(int i, int sensorCount)
+    //{
 
-        if (heightMap[i][sensorCount + 1] != 1.45f && heightMap[i - 1][sensorCount + 1] != 1.45f) return true;
-        if (heightMap[i - 1][sensorCount] == 1.45f) return true;
-        if (heightMap[i][sensorCount - 1] == 1.45f || heightMap[i - 1][sensorCount - 1] == 1.45f) return true;
-        if (heightMap[i][sensorCount - 2] == 1.45f || heightMap[i - 1][sensorCount - 2] == 1.45f) return true;
-        if (i > 1 &&
-            heightMap[i - 2][sensorCount] != 1.45f &&
-            heightMap[i - 2][sensorCount - 1] != 1.45f &&
-            heightMap[i - 2][sensorCount - 2] != 1.45f) return true;
-        if (i > 1 &&
-            heightMap[i - 2][sensorCount] != 1.45f &&
-            heightMap[i - 2][sensorCount - 1] != 1.45f &&
-            heightMap[i - 2][sensorCount + 1] != 1.45f &&
-            heightMap[i - 1][sensorCount + 1] != 1.45f) return true;
-        if (i > 1 &&
-            heightMap[i - 2][sensorCount - 1] != 1.45f &&
-            heightMap[i - 2][sensorCount - 2] != 1.45f &&
-            heightMap[i - 2][sensorCount - 3] != 1.45f &&
-            heightMap[i - 1][sensorCount - 3] != 1.45f) return true;
-        return false;
+    //    if (heightMap[i][sensorCount + 1] != 1.45f && heightMap[i - 1][sensorCount + 1] != 1.45f) return true;
+    //    if (heightMap[i - 1][sensorCount] == 1.45f) return true;
+    //    if (heightMap[i][sensorCount - 1] == 1.45f || heightMap[i - 1][sensorCount - 1] == 1.45f) return true;
+    //    if (heightMap[i][sensorCount - 2] == 1.45f || heightMap[i - 1][sensorCount - 2] == 1.45f) return true;
+    //    if (i > 1 &&
+    //        heightMap[i - 2][sensorCount] != 1.45f &&
+    //        heightMap[i - 2][sensorCount - 1] != 1.45f &&
+    //        heightMap[i - 2][sensorCount - 2] != 1.45f) return true;
+    //    if (i > 1 &&
+    //        heightMap[i - 2][sensorCount] != 1.45f &&
+    //        heightMap[i - 2][sensorCount - 1] != 1.45f &&
+    //        heightMap[i - 2][sensorCount + 1] != 1.45f &&
+    //        heightMap[i - 1][sensorCount + 1] != 1.45f) return true;
+    //    if (i > 1 &&
+    //        heightMap[i - 2][sensorCount - 1] != 1.45f &&
+    //        heightMap[i - 2][sensorCount - 2] != 1.45f &&
+    //        heightMap[i - 2][sensorCount - 3] != 1.45f &&
+    //        heightMap[i - 1][sensorCount - 3] != 1.45f) return true;
+    //    return false;
 
-    }
+    //}
 }
