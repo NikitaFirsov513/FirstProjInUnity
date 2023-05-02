@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+//using System.Diagnostics;
 using static UnityEngine.GraphicsBuffer;
 
 public class TextureGenerator : MonoBehaviour
@@ -59,6 +61,11 @@ public class TextureGenerator : MonoBehaviour
         int count = 0;
         string findPix = "";
 
+        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+        stopWatch.Start();
+
+
+
 
         for (int y = 1; y < height; y++)
         {
@@ -85,6 +92,14 @@ public class TextureGenerator : MonoBehaviour
                 }
             }
         }
+
+
+        TimeSpan ts = stopWatch.Elapsed;
+        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+        Debug.Log("RunTime>" + elapsedTime);
+
         Debug.Log("COUNT>" + count);
 
 
@@ -92,18 +107,27 @@ public class TextureGenerator : MonoBehaviour
     public static string FindNextPix(List<List<float>> heightMap, int startX, int startY, string findPix, Color[] pixels)
     {
         int nowX = startX, nowY = startY;
+        int prevX = startX, prevY = startY;
+        int minX = startX, maxX = startX;
+        int minY = startY, maxY = startY;
+
         int width = heightMap.Count - 1;
+        int countLoop = 0;
+        int lastVector = 4;
+        var mas = new List<List<int>>();
+
+        mas.Add(new List<int>());
+        mas[0][0] = 1;
+
         bool isFind;
         bool isConvFind;
-        int countLoop = 0;
-        //var localDict = new Dictionary<string, bool>();
+
         string localCoord = "";
-        int lastVector = 4;
+
+
+
         do
         {
-            Debug.Log("********************************");
-            Debug.Log("startX>" + startX);
-            Debug.Log("startY>" + startY);
             countLoop++;
             if (localCoord == "")
                 pixels[nowX + nowY * width] = new Color(0, 1f, 0);
@@ -111,7 +135,7 @@ public class TextureGenerator : MonoBehaviour
                 pixels[nowX + nowY * width] = new Color(1f, 0, 0);
             isFind = false;
             isConvFind = false;
-            
+
 
             for (int j = 1; j <= 9; j++)
             {
@@ -123,149 +147,86 @@ public class TextureGenerator : MonoBehaviour
                     i -= 8;
                 if (i > 8)
                     i -= 8;
-                //переделать колесо векторов движений
+
                 if (isConvFind)
                 {
-                    Debug.Log("--------------------------------------------");
-                    Debug.Log("isConvFind");
-                    Debug.Log("CASE>\t" + i);
+
                     switch (i)
                     {
                         case 1:
                             if (heightMap[nowX - 1][nowY] != 1.45f)
                             {
-
-                                //if (localCoord.Contains((nowX - 1) + ":" + (nowY)))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                                
                                 isFind = true;
                                 nowX -= 1;
                                 nowY += 0;
-                                
                             }
                             break;
 
                         case 2:
                             if (heightMap[nowX - 1][nowY + 1] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX-1) + ":" + (nowY + 1))) {
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                                
                                 isFind = true;
                                 nowX -= 1;
                                 nowY += 1;
-                               
-
-
                             }
                             break;
                         case 3:
                             if (heightMap[nowX][nowY + 1] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX ) + ":" + (nowY + 1)))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                               
                                 isFind = true;
                                 nowX += 0;
                                 nowY += 1;
-                               
                             }
                             break;
                         case 4:
                             if (heightMap[nowX + 1][nowY + 1] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX + 1) + ":" + (nowY+1)))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                               
                                 isFind = true;
                                 nowX += 1;
                                 nowY += 1;
-                                
                             }
                             break;
                         case 5:
                             if (heightMap[nowX + 1][nowY] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX + 1) + ":" + (nowY )))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                                
                                 isFind = true;
                                 nowX += 1;
                                 nowY -= 0;
-                                
                             }
                             break;
                         case 6:
                             if (heightMap[nowX + 1][nowY - 1] != 1.45f)
                             {
-                                //    if (localCoord.Contains((nowX +1) + ":" + (nowY - 1)))
-                                //    {
-                                //        isConvFind = false;
-                                //        break;
-                                //    }
-                               
                                 isFind = true;
                                 nowX += 1;
                                 nowY -= 1;
-                                
                             }
                             break;
                         case 7:
                             if (heightMap[nowX][nowY - 1] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX) + ":" + (nowY - 1)))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                               
                                 isFind = true;
                                 nowX -= 0;
                                 nowY -= 1;
-                               
                             }
                             break;
                         case 8:
                             if (heightMap[nowX - 1][nowY - 1] != 1.45f)
                             {
-                                //if (localCoord.Contains((nowX - 1) + ":" + (nowY -1)))
-                                //{
-                                //    isConvFind = false;
-                                //    break;
-                                //}
-                                
                                 isFind = true;
                                 nowX -= 1;
                                 nowY -= 1;
-                                
                             }
                             break;
                         default:
                             break;
                     }
-                    Debug.Log("nowX>" + nowX);
-                    Debug.Log("nowY>" + nowY);
+
                 }
 
                 if (!isConvFind)
                 {
-                    Debug.Log("--------------------------------------------");
-                    Debug.Log("!!!isConvFind");
-                    Debug.Log("CASE>\t" + i);
+
                     switch (i)
                     {
                         case 1:
@@ -303,35 +264,108 @@ public class TextureGenerator : MonoBehaviour
                         default:
                             break;
                     }
-                    Debug.Log("nowX>" + nowX);
-                    Debug.Log("nowY>" + nowY);
-                    Debug.Log("isConvFind>" + isConvFind);
+
 
                 }
 
 
-                //Debug.Log("-----------------");
-                //Debug.Log("startX>" + startX + "\tstartY>" + startY);
-                //Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
-                //Debug.Log("i>" + i);
-                //Debug.Log("isConvFind>" + isConvFind);
-                //Debug.Log("isFind>" + isFind);
-                //Debug.Log("-----------------");
 
 
-                Debug.Log("countLoop>" + countLoop);
+
 
 
                 if (isFind)
                 {
                     lastVector = i;
                     localCoord += nowX + ":" + nowY + " | ";
-                    //localDict.Add()
-                    Debug.Log("%%%%%%%%%%%");
-                    Debug.Log("FIIIIIIND");
-                    Debug.Log("startX>" + startX + "\tstartY>" + startY);
-                    Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
-                    Debug.Log("%%%%%%%%%%%");
+                    //проверка мин/макс
+                    if(maxX<nowX)
+                        maxX = nowX;
+                    if (minX > nowX)
+                        minX = nowX;
+
+                    if (maxY < nowY)
+                        maxY = nowY;
+                    if (minY > nowY)
+                        minY = nowY;
+
+
+
+
+                    if (prevY != nowY)
+                    {
+                        //при добавлении нужно знать минимальное значение x и максимальное
+                        //при добавлении нужно знать минимальное значение y и максимальное
+
+                        if (maxY == nowY)
+                        {
+
+                            //добавить массив
+                            if (minX - nowX == 0) {
+                            
+
+                            
+                            }
+                        }
+                        else {
+
+                            //добавить 1цу
+                            mas[minY - nowY][minX - nowX] = 1;
+
+                        }
+
+
+
+                        //if (prevX > nowX)
+                        //{
+                        //    if (minX < nowX && maxX > nowX) {
+                        //        mas.Add(CreateMass(mas[0].Count, nowX-minX));
+                        //    }
+                        //    if (minX == nowX )
+                        //    {
+                        //        AddToMass(mas,-1);
+                        //        mas.Add(CreateMass(mas[0].Count, nowX - minX));
+                        //    }
+                        //    if (maxX == nowX)
+                        //    {
+                        //        AddToMass(mas, 1);
+                        //        mas.Add(CreateMass(mas[0].Count, nowX - minX));
+                        //    }
+                        //}
+                        //if (prevX < nowX)
+                        //{
+
+                        //}
+                        //if (prevX == nowX)
+                        //{
+                        //    mas.Add(CreateMass(mas[0].Count, nowX - minX));
+                        //}
+                    }
+                    else
+                    {
+                        if (prevX > nowX)
+                        {
+                            AddToMass(mas, -1);
+                        }
+                        if (prevX < nowX)
+                        {
+                            AddToMass(mas, 1);
+                        }
+                    }
+
+
+                    //если prevX-nowX!=0, то было смещение по x
+                    //если prevY-nowY!=0, то было смещение по y
+
+
+                    //если было смещение по y:
+                    //  -добавляем новый массив со значениями == 0, кроме того, куда переместились. 
+                    //  -если prevX>nowX, то у других массивов вставляем в начало 0
+                    //  -если prevX<nowX, то у других массивов вставляем в конец 
+                    //  -если prevX<nowX, то у других массивов вставляем в конец 0
+                    //иначе было смещение по x, то добавляем новые значения в массивы
+                    //  -если prevX > nowX, то у других массивов вставляем в начало 0
+                    //  -если prevXБnowX, то у других массивов вставляем в конец 0
 
                     break;
                 }
@@ -340,18 +374,11 @@ public class TextureGenerator : MonoBehaviour
             if (countLoop > 500)
             {
                 pixels[nowX + nowY * width] = new Color(0, 0, 1f);
-
-                Debug.Log("%%%%%%%%%%%");
-                Debug.Log("TOOOOOMANYYYYY-------------------------------------------------------------");
-                Debug.Log("startX>" + startX + "\tstartY>" + startY);
-                Debug.Log("nowX>" + nowX + "\tnowY>" + nowY);
-                Debug.Log("%%%%%%%%%%%");
                 break;
             }
 
 
         } while (nowX != startX || nowY != startY);
-        Debug.Log("ПРОЩАЙ ЯИЧКО");
         return findPix + localCoord;
 
 
@@ -359,6 +386,52 @@ public class TextureGenerator : MonoBehaviour
 
     }
 
+
+    //метод "заполнить значениями"
+    //вход: длинна массива, индекс 1ци
+    public static List<int> CreateMass(int length, int index = -1)
+    {
+
+
+        var newList = new List<int>();
+
+
+        for (int i = 0; i <= length; i++)
+        {
+
+            if (i == index)
+                newList.Add(1);
+            else
+                newList.Add(0);
+
+        }
+
+        return newList;
+
+    }
+    //метод "добавить значения в массив"
+    //вход: массив, индекс куда вставлять "-1" влево, "1" вправо
+    public static bool AddToMass(List<List<int>> list, int index = 0)
+    {
+
+        if (index == -1)
+        {
+            foreach (var mas in list)
+            {
+                mas.Insert(0, 0);
+            }
+        }
+
+        if (index == 1)
+        {
+            foreach (var mas in list)
+            {
+                mas.Add(0);
+            }
+        }
+
+        return true;
+    }
 
     public static void SaveToPng(Texture2D texture)
     {
