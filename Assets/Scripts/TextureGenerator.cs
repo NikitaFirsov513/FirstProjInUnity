@@ -93,7 +93,7 @@ public class TextureGenerator : MonoBehaviour
             }
         }
 
-
+        stopWatch.Stop();
         TimeSpan ts = stopWatch.Elapsed;
         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
             ts.Hours, ts.Minutes, ts.Seconds,
@@ -114,16 +114,16 @@ public class TextureGenerator : MonoBehaviour
         int width = heightMap.Count - 1;
         int countLoop = 0;
         int lastVector = 4;
-        var mas = new List<List<int>>();
 
+        var mas = new List<List<int>>();
         mas.Add(new List<int>());
-        mas[0][0] = 1;
+        mas[0].Add(1);
 
         bool isFind;
         bool isConvFind;
 
         string localCoord = "";
-
+        Debug.Log("**************************************");
 
 
         do
@@ -150,7 +150,6 @@ public class TextureGenerator : MonoBehaviour
 
                 if (isConvFind)
                 {
-
                     switch (i)
                     {
                         case 1:
@@ -221,12 +220,10 @@ public class TextureGenerator : MonoBehaviour
                         default:
                             break;
                     }
-
                 }
 
                 if (!isConvFind)
                 {
-
                     switch (i)
                     {
                         case 1:
@@ -264,8 +261,6 @@ public class TextureGenerator : MonoBehaviour
                         default:
                             break;
                     }
-
-
                 }
 
 
@@ -279,79 +274,190 @@ public class TextureGenerator : MonoBehaviour
                     lastVector = i;
                     localCoord += nowX + ":" + nowY + " | ";
                     //проверка мин/макс
-                    if(maxX<nowX)
-                        maxX = nowX;
-                    if (minX > nowX)
-                        minX = nowX;
+                    
 
-                    if (maxY < nowY)
-                        maxY = nowY;
+
+                    if(minX>nowX)
+                        minX = nowX;
+                    if (maxX < nowX)
+                        maxX = nowX;
+
                     if (minY > nowY)
                         minY = nowY;
+                    if (maxY < nowY)
+                        maxY = nowY;
 
 
+                    Debug.Log("||||||||||||||");
+                    Debug.Log("prevX>" + prevX);
+                    Debug.Log("nowX>" + nowX);
+                    Debug.Log("prevY>" + prevY);
+                    Debug.Log("minX>" + minX);
+                    Debug.Log("maxX>" + maxX);
 
 
-                    if (prevY != nowY)
-                    {
-                        //при добавлении нужно знать минимальное значение x и максимальное
-                        //при добавлении нужно знать минимальное значение y и максимальное
+                    if (prevX - nowX > 0 && prevY - nowY < 0) {
 
-                        if (maxY == nowY)
+                        //Ћево¬верх
+                       
+
+
+                        Debug.Log("Ћево¬верх");
+                        //если за граници массива
+                        //  -добавл€ем новый массив с 1цой в нужной точке
+                        //  -добавл€ем к сущ-м массивам "0" слева
+
+                        //если не выходит за граници массива
+                        //  -добавл€ем новый массив с 1цой в нужной точке
+
+                        if (mas[0].Count <= maxX - minX)
                         {
-
-                            //добавить массив
-                            if (minX - nowX == 0) {
-                            
+                            Debug.Log("Ћево¬верх¬ыход«а√раници ƒлинна>" + (maxX - minX+1));
 
                             
-                            }
-                        }
-                        else {
-
-                            //добавить 1цу
-                            mas[minY - nowY][minX - nowX] = 1;
-
-                        }
-
-
-
-                        //if (prevX > nowX)
-                        //{
-                        //    if (minX < nowX && maxX > nowX) {
-                        //        mas.Add(CreateMass(mas[0].Count, nowX-minX));
-                        //    }
-                        //    if (minX == nowX )
-                        //    {
-                        //        AddToMass(mas,-1);
-                        //        mas.Add(CreateMass(mas[0].Count, nowX - minX));
-                        //    }
-                        //    if (maxX == nowX)
-                        //    {
-                        //        AddToMass(mas, 1);
-                        //        mas.Add(CreateMass(mas[0].Count, nowX - minX));
-                        //    }
-                        //}
-                        //if (prevX < nowX)
-                        //{
-
-                        //}
-                        //if (prevX == nowX)
-                        //{
-                        //    mas.Add(CreateMass(mas[0].Count, nowX - minX));
-                        //}
-                    }
-                    else
-                    {
-                        if (prevX > nowX)
-                        {
                             AddToMass(mas, -1);
+                            mas.Insert(0, CreateMass(maxX - minX + 1, 0));
                         }
-                        if (prevX < nowX)
-                        {
-                            AddToMass(mas, 1);
+                        if (mas[0].Count > maxX - minX){
+
+                            //не выходит за границы 
+
                         }
+
                     }
+                    if (prevX - nowX > 0 && prevY - nowY > 0)
+                    {
+
+                        //Ћево¬низ
+
+                        Debug.Log("Ћево¬низ");
+                        int a = maxY - nowY;
+                        int b = nowX - minX;
+
+                        mas[a][b] = 1;
+
+                        //добавить услови€ с/без переполнеи€ 
+                        //пока только Ѕ≈« переполнени€
+                    }
+                    if (prevX - nowX < 0 && prevY - nowY < 0)
+                    {
+
+                        //ѕраво¬верх
+                        Debug.Log("ѕраво¬верх");
+
+
+                        if (mas[0].Count < maxX - minX)
+                        {
+                            //переполн€ет
+                            AddToMass(mas, 1);
+
+                            mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
+
+
+                        }
+                        if (mas[0].Count >= maxX - minX)
+                        {
+                            //не переполн€ет
+
+                            mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
+
+                        }
+                      
+
+                    }
+                    if (prevX - nowX < 0 && prevY - nowY > 0)
+                    {
+
+                        //ѕраво¬низ
+                        Debug.Log("ѕраво¬низ");
+                        if (mas[0].Count <= maxX - minX)
+                        {
+                            //переполн€ет
+                            AddToMass(mas, 1);
+
+                            int a = maxY - nowY-1;
+                            int b = nowX - minX - 1;
+
+                            mas[a][b] = 1;
+
+
+                        }
+                        if (mas[0].Count > maxX - minX)
+                        {
+                            //не переполн€ет
+
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
+
+                    }
+                    if (prevX - nowX < 0 && prevY - nowY == 0)
+                    {
+
+                        //ѕраво
+                        Debug.Log("ѕраво");
+
+                        if (mas[0].Count <= maxX - minX) {
+                            //¬ыходит за границы
+                            AddToMass(mas, 1);
+                            
+                            int a = maxY - nowY;
+                            int b = nowX - minX - 1;
+
+                            mas[a][b] = 1;
+                        }
+                        if (mas[0].Count > maxX - minX)
+                        {
+
+                            //не выходит за границы
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
+
+                    }
+                    if (prevX - nowX > 0 && prevY - nowY == 0)
+                    {
+
+                        //Ћево
+                        Debug.Log("Ћево");
+                        int a = maxY - nowY;
+                        int b = nowX - minX;
+
+                        mas[a][b] = 1;
+
+                        //добавить услови€ с/без переполнеи€ 
+                        //пока только Ѕ≈« переполнени€
+                    }
+                    if (prevX - nowX == 0 && prevY - nowY < 0)
+                    {
+
+                        //¬верх
+                        Debug.Log("¬верх");
+                        mas.Insert(0, CreateMass(maxX - minX+1 , nowX - minX));
+                        //добавить услови€ с/без переполнеи€ 
+                        //пока только с переполнением
+
+                    }
+                    if (prevX - nowX == 0 && prevY - nowY > 0)
+                    {
+
+                        //¬низ
+                        Debug.Log("¬низ");
+                        int a = maxY - nowY;
+                        int b = nowX - minX;
+
+                        mas[a][b] = 1;
+                        //добавить услови€ с/без переполнеи€ 
+                        //пока только Ѕ≈« переполнени€
+
+                    }
+
+                    prevX = nowX; 
+                    prevY=nowY;
 
 
                     //если prevX-nowX!=0, то было смещение по x
@@ -379,7 +485,20 @@ public class TextureGenerator : MonoBehaviour
 
 
         } while (nowX != startX || nowY != startY);
-        return findPix + localCoord;
+
+        Debug.Log("---------MAS---------");
+        for (int i = 0; i < mas.Count; i++) {
+
+            string str = "";
+            for (int j = 0; j < mas[i].Count; j++)
+            {
+                str += mas[i][j].ToString() + " ";
+                
+            }
+            Debug.Log(str);
+            }
+
+            return findPix + localCoord;
 
 
 
@@ -396,7 +515,7 @@ public class TextureGenerator : MonoBehaviour
         var newList = new List<int>();
 
 
-        for (int i = 0; i <= length; i++)
+        for (int i = 0; i < length; i++)
         {
 
             if (i == index)
