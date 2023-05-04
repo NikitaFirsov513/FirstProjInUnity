@@ -332,10 +332,26 @@ public class TextureGenerator : MonoBehaviour
                         //Ћево¬низ
 
                         Debug.Log("Ћево¬низ");
-                        int a = maxY - nowY;
-                        int b = nowX - minX;
+                        
 
-                        mas[a][b] = 1;
+
+                        if (mas[0].Count <= maxX - minX)
+                        {
+                            AddToMass(mas, -1);
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
+                        else
+                        {
+                            //не переполн€ет
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+
+                        }
 
                         //добавить услови€ с/без переполнеи€ 
                         //пока только Ѕ≈« переполнени€
