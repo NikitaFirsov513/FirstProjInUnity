@@ -318,9 +318,10 @@ public class TextureGenerator : MonoBehaviour
                             AddToMass(mas, -1);
                             mas.Insert(0, CreateMass(maxX - minX + 1, 0));
                         }
-                        if (mas[0].Count > maxX - minX){
+                        else {
 
                             //не выходит за границы 
+                            mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
 
                         }
 
@@ -346,17 +347,14 @@ public class TextureGenerator : MonoBehaviour
                         Debug.Log("ПравоВверх");
 
 
-                        if (mas[0].Count < maxX - minX)
+                        if (mas[0].Count <= maxX - minX)
                         {
                             //переполняет
                             AddToMass(mas, 1);
 
                             mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
-
-
                         }
-                        if (mas[0].Count >= maxX - minX)
-                        {
+                        else{
                             //не переполняет
 
                             mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
@@ -375,19 +373,17 @@ public class TextureGenerator : MonoBehaviour
                             //переполняет
                             AddToMass(mas, 1);
 
-                            int a = maxY - nowY-1;
-                            int b = nowX - minX - 1;
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
 
                             mas[a][b] = 1;
 
-
                         }
-                        if (mas[0].Count > maxX - minX)
-                        {
+                        else{
                             //не переполняет
 
                             int a = maxY - nowY;
-                            int b = nowX - minX;
+                            int b = mas[0].Count - (maxX - nowX) - 1;
 
                             mas[a][b] = 1;
                         }
@@ -404,11 +400,11 @@ public class TextureGenerator : MonoBehaviour
                             AddToMass(mas, 1);
                             
                             int a = maxY - nowY;
-                            int b = nowX - minX - 1;
+                            int b = nowX - minX;
 
                             mas[a][b] = 1;
                         }
-                        if (mas[0].Count > maxX - minX)
+                        else
                         {
 
                             //не выходит за границы
@@ -448,7 +444,7 @@ public class TextureGenerator : MonoBehaviour
                         //Вниз
                         Debug.Log("Вниз");
                         int a = maxY - nowY;
-                        int b = nowX - minX;
+                        int b = mas[0].Count - (maxX - nowX) - 1;
 
                         mas[a][b] = 1;
                         //добавить условия с/без переполнеия 
@@ -456,8 +452,9 @@ public class TextureGenerator : MonoBehaviour
 
                     }
 
+
                     prevX = nowX; 
-                    prevY=nowY;
+                    prevY = nowY;
 
 
                     //если prevX-nowX!=0, то было смещение по x
