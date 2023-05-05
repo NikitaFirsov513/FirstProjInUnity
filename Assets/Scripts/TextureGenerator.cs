@@ -346,7 +346,7 @@ public class TextureGenerator : MonoBehaviour
                         else
                         {
                             //не переполняет
-                            int a = maxY - nowY;
+                            int a = maxY - nowY - 1;
                             int b = nowX - minX;
 
                             mas[a][b] = 1;
@@ -373,8 +373,10 @@ public class TextureGenerator : MonoBehaviour
                         else{
                             //не переполняет
 
-                            mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
 
+                            mas[a][b] = 1;
                         }
                       
 
@@ -435,21 +437,51 @@ public class TextureGenerator : MonoBehaviour
                     {
 
                         //Лево
-                        Debug.Log("Лево");
-                        int a = maxY - nowY;
-                        int b = nowX - minX;
+                        //Debug.Log("Лево");
+                        
 
-                        mas[a][b] = 1;
 
-                        //добавить условия с/без переполнеия 
-                        //пока только БЕЗ переполнения
-                    }
+                        if (mas[0].Count <= maxX - minX)
+                        {
+                            Debug.Log("Лево С переполнением");
+
+                            AddToMass(mas, -1);
+
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
+                        else {
+                            Debug.Log("Лево БЕЗ переполнения");
+
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
+
+
+                            //добавить условия с/без переполнеия 
+                            //пока только БЕЗ переполнения
+                        }
                     if (prevX - nowX == 0 && prevY - nowY < 0)
                     {
 
                         //Вверх
-                        Debug.Log("Вверх");
-                        mas.Insert(0, CreateMass(maxX - minX+1 , nowX - minX));
+                        
+                        if (mas[0].Count <= maxX - minX)
+                        {
+                            Debug.Log("Вверх С переполнением");
+                            mas.Insert(0, CreateMass(maxX - minX + 1, nowX - minX));
+                        }
+                        else {
+                            Debug.Log("Вверх БЕЗ переполнением");
+                            int a = maxY - nowY;
+                            int b = nowX - minX;
+
+                            mas[a][b] = 1;
+                        }
                         //добавить условия с/без переполнеия 
                         //пока только с переполнением
 
@@ -460,7 +492,8 @@ public class TextureGenerator : MonoBehaviour
                         //Вниз
                         Debug.Log("Вниз");
                         int a = maxY - nowY;
-                        int b = mas[0].Count - (maxX - nowX) - 1;
+                        //int b = mas[0].Count - (maxX - nowX) - 1;
+                        int b = nowX - minX;
 
                         mas[a][b] = 1;
                         //добавить условия с/без переполнеия 
