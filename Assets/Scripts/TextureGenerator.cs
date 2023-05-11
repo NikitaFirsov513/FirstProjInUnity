@@ -600,8 +600,17 @@ public class TextureGenerator : MonoBehaviour
             }
             Debug.Log(str);
         }
+        int S = CalcSquare(mas);
+
+
         Debug.Log(@"\--------MAS---------/");
-        Debug.Log("SQUARE>" + CalcSquare(mas));
+        Debug.Log("SQUARE>" + S);
+        Debug.Log("EGG>" + S / 18);
+
+        CalcEgg.addSum(S / 18);
+
+
+
 
         return findPix + localCoord;
 

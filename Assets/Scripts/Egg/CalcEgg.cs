@@ -32,9 +32,9 @@ public class CalcEgg : MonoBehaviour
         sum=newSum;
     }
 
-    public static void addSum()
+    public static void addSum(int col = 1)
     {
-        sum += 1;
+        sum += col;
     }
 
 }

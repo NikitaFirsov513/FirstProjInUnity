@@ -25,7 +25,7 @@ public class SpawnerScript : MonoBehaviour
             nextSpawn = Time.time + spawnDelay;
             CalcEgg.addEggSpawnCol(spawnCol);
             for (int i = 0; i < spawnCol; i++) {
-                randomX = Random.Range(-(width-0.1f)/2, (width - 0.1f)/ 2) ;
+                randomX = Random.Range(-(width-0.2f)/2, (width - 0.2f)/ 2) ;
                 float rotateEgg = Random.Range(0.0f, 360.0f);
                 //float rotateEgg = 180f;
                 whereToSpawn = new Vector3(randomX, 2.0f, -7f);
