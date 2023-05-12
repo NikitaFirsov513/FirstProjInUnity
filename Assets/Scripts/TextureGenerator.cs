@@ -37,7 +37,7 @@ public class TextureGenerator : MonoBehaviour
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
-        FindEggCout(heightMap, pixels);
+        //FindEggCout(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -606,8 +606,8 @@ public class TextureGenerator : MonoBehaviour
         Debug.Log(@"\--------MAS---------/");
         Debug.Log("SQUARE>" + S);
         Debug.Log("EGG>" + S / 18);
-
-        CalcEgg.addSum(S / 18);
+        //доделать скрипт распозновани€ количества €иц
+        CalcEgg.addSum(S / 15);
 
 
 
