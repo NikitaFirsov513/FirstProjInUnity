@@ -276,9 +276,9 @@ public class TextureGenerator : MonoBehaviour
                 {
                     lastVector = i;
                     localCoord += nowX + ":" + nowY + " | ";
+
+
                     //проверка мин/макс
-
-
 
                     if (minX > nowX)
                         minX = nowX;
@@ -291,12 +291,7 @@ public class TextureGenerator : MonoBehaviour
                         maxY = nowY;
 
 
-                    //Debug.Log("||||||||||||||");
-                    //Debug.Log("prevX>" + prevX);
-                    //Debug.Log("nowX>" + nowX);
-                    //Debug.Log("prevY>" + prevY);
-                    //Debug.Log("minX>" + minX);
-                    //Debug.Log("maxX>" + maxX);
+                    
 
 
                     if (prevX - nowX > 0 && prevY - nowY < 0)
