@@ -37,7 +37,7 @@ public class TextureGenerator : MonoBehaviour
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
-        //FindEggCout(heightMap, pixels);
+        FindEggCout(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -605,6 +605,22 @@ public class TextureGenerator : MonoBehaviour
         CalcEgg.addSum(S / 15);
 
 
+        Debug.Log(@"/--------DEBUG-MAS---------\");
+
+        for (int i = mas.Count - 1; i >= 0; i--)
+        {
+
+            string str = "";
+            for (int j = 0; j <= mas[0].Count - 1; j++)
+            {
+                str += heightMap[minX + j][minY + i] + " ";
+
+            }
+            Debug.Log(str + "\t\t");
+        }
+
+
+        Debug.Log(@"\--------DEBUG-MAS---------/");
 
 
         return findPix + localCoord;
