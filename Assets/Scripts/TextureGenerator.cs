@@ -58,7 +58,6 @@ public class TextureGenerator : MonoBehaviour
         //если дошли до начальной точки, то делаем заново
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
-        int count = 0;
         string findPix = "";
 
         System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
@@ -83,7 +82,6 @@ public class TextureGenerator : MonoBehaviour
                     heightMap[x + 2][y - 1] == 1.45f)
                 {
 
-                    count++;
                     pixels[x + y * width] = new Color(1f, 1f, 0);
 
                     if (!findPix.Contains(x + ":" + y))
@@ -93,6 +91,8 @@ public class TextureGenerator : MonoBehaviour
             }
         }
 
+
+        
         stopWatch.Stop();
         TimeSpan ts = stopWatch.Elapsed;
         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
@@ -100,7 +100,6 @@ public class TextureGenerator : MonoBehaviour
             ts.Milliseconds / 10);
         Debug.Log("RunTime>" + elapsedTime);
 
-        Debug.Log("COUNT>" + count);
 
 
     }
@@ -595,15 +594,15 @@ public class TextureGenerator : MonoBehaviour
             }
             Debug.Log(str);
         }
-        int S = CalcSquare(mas);
 
 
         Debug.Log(@"\--------MAS---------/");
-        Debug.Log("SQUARE>" + S);
-        Debug.Log("EGG>" + S / 18);
-        //доделать скрипт распознования количества яиц
-        CalcEgg.addSum(S / 15);
 
+        //int S = CalcSquare(mas);
+        //Debug.Log("SQUARE>" + S);
+        //Debug.Log("EGG>" + S / 18);
+        //доделать скрипт распознования количества яиц
+        //CalcEgg.addSum(S / 15);
 
         Debug.Log(@"/--------DEBUG-MAS---------\");
 
@@ -613,10 +612,10 @@ public class TextureGenerator : MonoBehaviour
             string str = "";
             for (int j = 0; j <= mas[0].Count - 1; j++)
             {
-                str += heightMap[minX + j][minY + i] + " ";
+                str += heightMap[minX + j][minY + i] +" ";
 
             }
-            Debug.Log(str + "\t\t");
+            Debug.Log(str );
         }
 
 
