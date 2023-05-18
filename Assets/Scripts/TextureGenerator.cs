@@ -695,6 +695,10 @@ public class TextureGenerator : MonoBehaviour
                         if (isPrevTop)
                         {
                             sum++;
+
+                            isPrevConv = false;
+                            isPrevTop = false;
+                            isPrevBot = true;
                         }
                         else {
                             isPrevConv = false;
