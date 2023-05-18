@@ -92,7 +92,7 @@ public class TextureGenerator : MonoBehaviour
         }
 
 
-        
+
         stopWatch.Stop();
         TimeSpan ts = stopWatch.Elapsed;
         string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
@@ -290,7 +290,7 @@ public class TextureGenerator : MonoBehaviour
                         maxY = nowY;
 
 
-                    
+
 
 
                     if (prevX - nowX > 0 && prevY - nowY < 0)
@@ -323,7 +323,7 @@ public class TextureGenerator : MonoBehaviour
                         if (mas[0].Count < maxX - minX + 1)
                         {
                             AddToMass(mas, -1);
-                            
+
                             int a = maxY - nowY;
                             int b = nowX - minX;
 
@@ -606,18 +606,19 @@ public class TextureGenerator : MonoBehaviour
 
         Debug.Log(@"/--------DEBUG-MAS---------\");
 
-        for (int i = mas.Count - 1; i >= 0; i--)
-        {
+        //for (int i = mas.Count - 1; i >= 0; i--)
+        //{
 
-            string str = "";
-            for (int j = 0; j <= mas[0].Count - 1; j++)
-            {
-                str += heightMap[minX + j][minY + i] +" ";
+        //    string str = "";
+        //    for (int j = 0; j <= mas[0].Count - 1; j++)
+        //    {
+        //        str += heightMap[minX + j][minY + i] +" ";
 
-            }
-            Debug.Log(str );
-        }
+        //    }
+        //    Debug.Log(str );
+        //}
 
+        FindEggByHeight(minX, minY, mas, heightMap);
 
         Debug.Log(@"\--------DEBUG-MAS---------/");
 
@@ -628,7 +629,101 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
+    public static int FindEggByHeight(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
+    {
 
+        int maxSum = 0;
+        bool isPrevConv = false;
+        bool isPrevTop = false;
+        bool isPrevBot = false;
+
+
+
+        for (int i = mas.Count - 1; i >= 0; i--)
+        {
+
+            string str = "";
+            int sum = 0;
+            for (int j = 0; j <= mas[i].Count - 1; j++)
+            {
+                str += heightMap[minX + j][minY + i] + " ";
+
+                if (j == 0)
+                {
+                    switch (heightMap[minX + j][minY + i])
+                    {
+                        case 1.45f:
+                            {
+                                isPrevConv = true;
+                                isPrevTop = false;
+                                isPrevBot = false;
+                                break;
+                            }
+                        default:
+                            {
+                                isPrevConv = false;
+                                isPrevTop = true;
+                                isPrevBot = false;
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    float now = heightMap[minX + j][minY + i];
+
+                    float prev = heightMap[minX + j - 1][minY + i];
+                    if (heightMap[minX + j][minY + i]==1.45f) {
+                        isPrevConv = true;
+                        isPrevTop = false;
+                        isPrevBot = false;
+
+                        continue;
+                    }
+
+                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i])<0)
+                    {
+
+                        isPrevConv = false;
+                        isPrevTop = true;
+                        isPrevBot = false;
+
+                    }
+                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i]) > 0)
+                    {
+
+                        if (isPrevTop)
+                        {
+                            sum++;
+                        }
+                        else {
+                            isPrevConv = false;
+                            isPrevTop = false;
+                            isPrevBot = true;
+                        }
+
+                    }
+
+
+                }
+
+            }
+            
+            
+            
+            if(sum>maxSum)
+                maxSum = sum;
+
+
+
+            Debug.Log(str);
+        }
+        Debug.Log("SUM>" + maxSum);
+        return 0;
+
+
+
+    }
     public static int CalcSquare(List<List<int>> mas)
     {
 
