@@ -6,10 +6,22 @@ public class GlobalVar : MonoBehaviour
 {
     //storage for global var
 
+
+
     private static float sensorUpdateDelay = 0.04f;
 
     private static bool isSpawn = true;
 
+    private static float borderVal = 1.45f;
+
+    public static void setBorderVal(float a)
+    {
+        borderVal = a;
+    }
+    public static float getBorderVal()
+    {
+        return borderVal;
+    }
     public static void ToggleIsSpawn() {
         isSpawn = !isSpawn;    
     }

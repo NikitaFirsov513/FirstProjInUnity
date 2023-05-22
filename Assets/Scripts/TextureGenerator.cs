@@ -18,6 +18,8 @@ public class TextureGenerator : MonoBehaviour
 
     public static Texture2D GetTexture(List<List<float>> heightMap)
     {
+        float borderVal = GlobalVar.getBorderVal();
+
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
         var texture = new Texture2D(width, height);
@@ -29,7 +31,7 @@ public class TextureGenerator : MonoBehaviour
             {
                 float value = heightMap[x][y];
 
-                if (value == 1.45f)
+                if (value >= borderVal)
                     value = 0;
                 else
                     value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
@@ -37,7 +39,7 @@ public class TextureGenerator : MonoBehaviour
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
-        FindEggCout(heightMap, pixels);
+        //FindEggCout(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -865,12 +867,12 @@ public class TextureGenerator : MonoBehaviour
 
         RawImage image = GameObject.Find("RawImage").GetComponent<RawImage>();
 
-        int width = heightMap.Count - 1;
 
+        float borderVal = GlobalVar.getBorderVal();
+        int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
         var texture = new Texture2D(width, 200);
         var pixels = new Color[width * 200];
-
 
         for (var x = 0; x < width; x++)
         {
@@ -881,7 +883,7 @@ public class TextureGenerator : MonoBehaviour
 
                 float value = heightMap[width - x][height - y];
 
-                if (value == 1.45f)
+                if (value >= borderVal)
                     value = 0;
                 else
                     value = (((1.45f - value) * 1000) - 21f) / 0.003f / 10000;
