@@ -15,6 +15,7 @@ public class BorderValSlider : MonoBehaviour
 
     void Start()
     {
+        slider.value = GlobalVar.getBorderVal();
         slider.onValueChanged.AddListener((v) => { 
             textField.text = v.ToString();
             GlobalVar.setBorderVal(v);

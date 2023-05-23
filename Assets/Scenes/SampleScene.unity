@@ -4173,7 +4173,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -356.99997, y: -161.80014}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 35, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1099475630
 GameObject:
@@ -5804,7 +5804,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -390, y: 230}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 35, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1982663841
 GameObject:
@@ -6320,7 +6320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   go: {fileID: 3711697915795479555, guid: 0e79c5020c1266943b7d263d89f009e0, type: 3}
-  spawnDelay: 1
+  spawnDelay: 0.5
   spawnCol: 7
 --- !u!4 &2127496332
 Transform:

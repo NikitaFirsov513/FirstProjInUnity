@@ -8,11 +8,11 @@ public class GlobalVar : MonoBehaviour
 
 
 
-    private static float sensorUpdateDelay = 0.04f;
+    private static float sensorUpdateDelay = 0.025f;
 
     private static bool isSpawn = true;
 
-    private static float borderVal = 1.45f;
+    private static float borderVal = 1.416f;
 
     public static void setBorderVal(float a)
     {

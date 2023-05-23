@@ -40,6 +40,7 @@ public class TextureGenerator : MonoBehaviour
             }
         }
         //FindEggCout(heightMap, pixels);
+        FindEggCoutV2(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
@@ -50,6 +51,66 @@ public class TextureGenerator : MonoBehaviour
         SaveToPng(texture);
 
         return texture;
+    }
+    public static void FindEggCoutV2(List<List<float>> heightMap, Color[] pixels){
+
+
+        int width = heightMap.Count - 1;
+        int height = heightMap[0].Count - 1;
+        int count = 0;
+        float borderVal = GlobalVar.getBorderVal();
+        string findPix = "";
+
+        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+        stopWatch.Start();
+
+
+
+
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 1; x < width; x++)
+            {
+
+
+                //float value = heightMap[y][x];
+
+                if (heightMap[x][y] > borderVal)
+                    continue;
+
+                float left = heightMap[x - 1][y];
+                float left_bot = heightMap[x - 1][y - 1];
+                float bot = heightMap[x - 1][y - 1];
+                float right_bot = heightMap[x - 1][y - 1];
+
+                if (heightMap[x - 1][y] > borderVal &&
+                    heightMap[x - 1][y - 1] > borderVal &&
+                    heightMap[x][y - 1] > borderVal &&
+                    heightMap[x + 1][y - 1] > borderVal&& 
+                    heightMap[x + 2][y - 1] > borderVal)
+                {
+
+                    pixels[x + y * width] = new Color(1f, 1f, 0);
+                    count++;
+                    
+                }
+            }
+        }
+
+
+
+        stopWatch.Stop();
+        TimeSpan ts = stopWatch.Elapsed;
+        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            ts.Hours, ts.Minutes, ts.Seconds,
+            ts.Milliseconds / 10);
+
+        Debug.Log("COUNT>" + count);
+        Debug.Log("RunTime>" + elapsedTime);
+
+
+
+
     }
     public static void FindEggCout(List<List<float>> heightMap, Color[] pixels)
     {

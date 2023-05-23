@@ -27,7 +27,7 @@ public class SpawnerScript : MonoBehaviour
             nextSpawn = Time.time + spawnDelay;
             CalcEgg.addEggSpawnCol(spawnCol);
             for (int i = 0; i < spawnCol; i++) {
-                randomX = Random.Range(-(width-0.2f)/2, (width - 0.2f)/ 2);
+                randomX = Random.Range(-(width-0.5f)/2, (width - 0.5f)/ 2);
 
                 randomScale = Random.Range(0.88f, 1.12f);
                 //randomScale = Random.Range(0.88f, 0.89f);
@@ -35,7 +35,7 @@ public class SpawnerScript : MonoBehaviour
                 //randomScale = Random.Range(1.11f, 1.12f);
                 float rotateEgg = Random.Range(0.0f, 360.0f);
                 //float rotateEgg = 180f;
-                whereToSpawn = new Vector3(randomX, 2.0f, -7f);
+                whereToSpawn = new Vector3(randomX, 2.0f, -3f);
                 GameObject Enemy = Instantiate(go, whereToSpawn, Quaternion.identity);
                 Enemy.transform.Rotate(0.0f, rotateEgg,90f);
                 Enemy.transform.localScale=new Vector3(0.0105f * randomScale, 0.0105f* randomScale, 0.0105f * randomScale);//0.021
