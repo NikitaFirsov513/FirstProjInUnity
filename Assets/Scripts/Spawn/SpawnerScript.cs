@@ -35,7 +35,9 @@ public class SpawnerScript : MonoBehaviour
                 //randomScale = Random.Range(1.11f, 1.12f);
                 float rotateEgg = Random.Range(0.0f, 360.0f);
                 //float rotateEgg = 180f;
+                //whereToSpawn = new Vector3(randomX, 2.0f, -3f);
                 whereToSpawn = new Vector3(randomX, 2.0f, -3f);
+
                 GameObject Enemy = Instantiate(go, whereToSpawn, Quaternion.identity);
                 Enemy.transform.Rotate(0.0f, rotateEgg,90f);
                 Enemy.transform.localScale=new Vector3(0.0105f * randomScale, 0.0105f* randomScale, 0.0105f * randomScale);//0.021

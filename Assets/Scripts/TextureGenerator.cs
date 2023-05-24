@@ -39,8 +39,8 @@ public class TextureGenerator : MonoBehaviour
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
-        //FindEggCout(heightMap, pixels);
-        FindEggCoutV2(heightMap, pixels);
+        FindEggCout(heightMap, pixels);
+        //FindEggCoutV2(heightMap, pixels);
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;

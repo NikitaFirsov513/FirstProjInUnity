@@ -26,24 +26,33 @@ public class HeightMap : MonoBehaviour
     public static void CheckSensors()
     {
 
-        //int sensorCount = heightMap[0].Count - 3;
-        //for (int i = 2; i < heightMap.Count-3; i++)
-        //{
+        //проверка центра
 
-        //    if (heightMap[i][sensorCount] == 1.45f) continue;
+        if (heightMap[0].Count < 5)
+            return;
 
-        //    bool left = heightMap[i - 1][sensorCount] > heightMap[i][sensorCount] && heightMap[i - 1][sensorCount] < heightMap[i - 2][sensorCount];
-        //    bool right = heightMap[i + 1][sensorCount] > heightMap[i][sensorCount] && heightMap[i + 1][sensorCount] < heightMap[i + 2][sensorCount];
-        //    bool forward = heightMap[i][sensorCount - 1] > heightMap[i][sensorCount] && heightMap[i][sensorCount - 1] < heightMap[i][sensorCount - 2];
-        //    bool back = heightMap[i][sensorCount + 1] > heightMap[i][sensorCount] && heightMap[i][sensorCount + 1] < heightMap[i][sensorCount + 2];
 
-        //    if (left &&
-        //        right &&
-        //        forward &&
-        //        back)
-        //        CalcEgg.addSum();
+        for (int i = 1; i < heightMap.Count - 2; i++) {
 
-        //}
+            int j = heightMap[i].Count-2;
+            float value = heightMap[i][j];
+
+            if (heightMap[i][j + 1] > value &&
+                heightMap[i][j - 1] > value &&
+                heightMap[i + 1][j + 1] > value &&
+                heightMap[i + 1][j] > value &&
+                heightMap[i + 1][j - 1] > value &&
+                heightMap[i - 1][j + 1] > value &&
+                heightMap[i - 1][j] > value &&
+                heightMap[i - 1][j - 1] > value
+                ) {
+                CalcEgg.addSum();
+            }
+
+
+        }
+
+
         TextureGenerator.UpdateImage(heightMap);
     }
 
