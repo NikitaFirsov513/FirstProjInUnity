@@ -44,7 +44,8 @@ public class HeightMap : MonoBehaviour
                 heightMap[i + 1][j - 1] > value &&
                 heightMap[i - 1][j + 1] > value &&
                 heightMap[i - 1][j] > value &&
-                heightMap[i - 1][j - 1] > value
+                heightMap[i - 1][j - 1] > value &&
+                value < GlobalVar.getBorderVal()
                 ) {
                 CalcEgg.addSum();
             }

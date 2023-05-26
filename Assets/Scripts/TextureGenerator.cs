@@ -127,22 +127,23 @@ public class TextureGenerator : MonoBehaviour
         stopWatch.Start();
 
 
-
+        float minDistance = GlobalVar.getMinDistance();
 
         for (int y = 1; y < height; y++)
         {
             for (int x = 1; x < width; x++)
             {
 
+                
 
-                if (heightMap[x][y] == 1.45f)
+                if (heightMap[x][y] > minDistance)
                     continue;
 
-                if (heightMap[x - 1][y] == 1.45f &&
-                    heightMap[x - 1][y - 1] == 1.45f &&
-                    heightMap[x][y - 1] == 1.45f &&
-                    heightMap[x + 1][y - 1] == 1.45f &&
-                    heightMap[x + 2][y - 1] == 1.45f)
+                if (heightMap[x - 1][y] > minDistance &&
+                    heightMap[x - 1][y - 1] > minDistance &&
+                    heightMap[x][y - 1] > minDistance &&
+                    heightMap[x + 1][y - 1] > minDistance &&
+                    heightMap[x + 2][y - 1] > minDistance)
                 {
 
                     pixels[x + y * width] = new Color(1f, 1f, 0);
@@ -176,6 +177,8 @@ public class TextureGenerator : MonoBehaviour
         int width = heightMap.Count - 1;
         int countLoop = 0;
         int lastVector = 4;
+
+        float minDistance = GlobalVar.getMinDistance();
 
         var mas = new List<List<int>>();
         mas.Add(new List<int>());
@@ -218,7 +221,7 @@ public class TextureGenerator : MonoBehaviour
                     switch (i)
                     {
                         case 1:
-                            if (heightMap[nowX - 1][nowY] != 1.45f)
+                            if (heightMap[nowX - 1][nowY] < minDistance)
                             {
                                 isFind = true;
                                 nowX -= 1;
@@ -227,7 +230,7 @@ public class TextureGenerator : MonoBehaviour
                             break;
 
                         case 2:
-                            if (heightMap[nowX - 1][nowY + 1] != 1.45f)
+                            if (heightMap[nowX - 1][nowY + 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX -= 1;
@@ -235,7 +238,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 3:
-                            if (heightMap[nowX][nowY + 1] != 1.45f)
+                            if (heightMap[nowX][nowY + 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX += 0;
@@ -243,7 +246,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 4:
-                            if (heightMap[nowX + 1][nowY + 1] != 1.45f)
+                            if (heightMap[nowX + 1][nowY + 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX += 1;
@@ -251,7 +254,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 5:
-                            if (heightMap[nowX + 1][nowY] != 1.45f)
+                            if (heightMap[nowX + 1][nowY] < minDistance)
                             {
                                 isFind = true;
                                 nowX += 1;
@@ -259,7 +262,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 6:
-                            if (heightMap[nowX + 1][nowY - 1] != 1.45f)
+                            if (heightMap[nowX + 1][nowY - 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX += 1;
@@ -267,7 +270,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 7:
-                            if (heightMap[nowX][nowY - 1] != 1.45f)
+                            if (heightMap[nowX][nowY - 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX -= 0;
@@ -275,7 +278,7 @@ public class TextureGenerator : MonoBehaviour
                             }
                             break;
                         case 8:
-                            if (heightMap[nowX - 1][nowY - 1] != 1.45f)
+                            if (heightMap[nowX - 1][nowY - 1] < minDistance)
                             {
                                 isFind = true;
                                 nowX -= 1;
@@ -292,35 +295,35 @@ public class TextureGenerator : MonoBehaviour
                     switch (i)
                     {
                         case 1:
-                            if (heightMap[nowX - 1][nowY] == 1.45f)
+                            if (heightMap[nowX - 1][nowY] > minDistance )
                                 isConvFind = true;
                             break;
                         case 2:
-                            if (heightMap[nowX - 1][nowY + 1] == 1.45f)
+                            if (heightMap[nowX - 1][nowY + 1] > minDistance)
                                 isConvFind = true;
                             break;
                         case 3:
-                            if (heightMap[nowX][nowY + 1] == 1.45f)
+                            if (heightMap[nowX][nowY + 1] > minDistance)
                                 isConvFind = true;
                             break;
                         case 4:
-                            if (heightMap[nowX + 1][nowY + 1] == 1.45f)
+                            if (heightMap[nowX + 1][nowY + 1] > minDistance)
                                 isConvFind = true;
                             break;
                         case 5:
-                            if (heightMap[nowX + 1][nowY] == 1.45f)
+                            if (heightMap[nowX + 1][nowY] > minDistance)
                                 isConvFind = true;
                             break;
                         case 6:
-                            if (heightMap[nowX + 1][nowY - 1] == 1.45f)
+                            if (heightMap[nowX + 1][nowY - 1] > minDistance)
                                 isConvFind = true;
                             break;
                         case 7:
-                            if (heightMap[nowX][nowY - 1] == 1.45f)
+                            if (heightMap[nowX][nowY - 1] > minDistance)
                                 isConvFind = true;
                             break;
                         case 8:
-                            if (heightMap[nowX - 1][nowY - 1] == 1.45f)
+                            if (heightMap[nowX - 1][nowY - 1] > minDistance)
                                 isConvFind = true;
                             break;
                         default:

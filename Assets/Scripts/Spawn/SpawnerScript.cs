@@ -36,7 +36,7 @@ public class SpawnerScript : MonoBehaviour
                 float rotateEgg = Random.Range(0.0f, 360.0f);
                 //float rotateEgg = 180f;
                 //whereToSpawn = new Vector3(randomX, 2.0f, -3f);
-                whereToSpawn = new Vector3(randomX, 2.0f, -3f);
+                whereToSpawn = new Vector3(randomX, 2.0f, -7f);
 
                 GameObject Enemy = Instantiate(go, whereToSpawn, Quaternion.identity);
                 Enemy.transform.Rotate(0.0f, rotateEgg,90f);
