@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR;
+using static UnityEditor.ShaderData;
 //using System.Diagnostics;
 using static UnityEngine.GraphicsBuffer;
 
@@ -52,7 +53,8 @@ public class TextureGenerator : MonoBehaviour
 
         return texture;
     }
-    public static void FindEggCoutV2(List<List<float>> heightMap, Color[] pixels){
+    public static void FindEggCoutV2(List<List<float>> heightMap, Color[] pixels)
+    {
 
 
         int width = heightMap.Count - 1;
@@ -86,13 +88,13 @@ public class TextureGenerator : MonoBehaviour
                 if (heightMap[x - 1][y] > borderVal &&
                     heightMap[x - 1][y - 1] > borderVal &&
                     heightMap[x][y - 1] > borderVal &&
-                    heightMap[x + 1][y - 1] > borderVal&& 
+                    heightMap[x + 1][y - 1] > borderVal &&
                     heightMap[x + 2][y - 1] > borderVal)
                 {
 
                     pixels[x + y * width] = new Color(1f, 1f, 0);
                     count++;
-                    
+
                 }
             }
         }
@@ -134,7 +136,7 @@ public class TextureGenerator : MonoBehaviour
             for (int x = 1; x < width; x++)
             {
 
-                
+
 
                 if (heightMap[x][y] > minDistance)
                     continue;
@@ -295,7 +297,7 @@ public class TextureGenerator : MonoBehaviour
                     switch (i)
                     {
                         case 1:
-                            if (heightMap[nowX - 1][nowY] > minDistance )
+                            if (heightMap[nowX - 1][nowY] > minDistance)
                                 isConvFind = true;
                             break;
                         case 2:
@@ -688,6 +690,7 @@ public class TextureGenerator : MonoBehaviour
 
         Debug.Log(@"\--------DEBUG-MAS---------/");
 
+        TestCenterOfMass(minX, minY, mas, heightMap);
 
         return findPix + localCoord;
 
@@ -695,6 +698,73 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
+
+
+
+
+    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
+    {
+
+
+
+
+
+
+
+
+        string str = "";
+
+        for (int i = mas.Count - 2; i >= 1; i--)
+        {
+
+
+
+            for (int j = 1; j <= mas[i].Count - 2; j++)
+            {
+
+                float val = heightMap[minX + j][minY + i];
+
+                float valLeft = heightMap[minX + j - 1][minY + i];
+                float valRight = heightMap[minX + j + 1][minY + i];
+
+                float valTop = heightMap[minX + j][minY + i + 1];
+                float valBot = heightMap[minX + j][minY + i - 1];
+
+
+                float valTopLeft = heightMap[minX + j - 1][minY + i + 1];
+                float valTopRight = heightMap[minX + j + 1][minY + i + 1];
+
+
+                float valBotLeft = heightMap[minX + j - 1][minY + i - 1];
+                float valBotRight = heightMap[minX + j + 1][minY + i - 1];
+
+
+                str += (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
+                //Math.Pow
+                str += " ";
+            }
+            str += "\n";
+
+        }
+
+
+
+
+
+
+        Debug.Log(@"/--------TestCenterOfMass---------\");
+        Debug.Log(str);
+        Debug.Log(@"\--------TestCenterOfMass---------/");
+
+
+
+
+
+
+
+        return 0;
+    }
+
     public static int FindEggByHeight(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
     {
 
@@ -739,7 +809,8 @@ public class TextureGenerator : MonoBehaviour
                     float now = heightMap[minX + j][minY + i];
 
                     float prev = heightMap[minX + j - 1][minY + i];
-                    if (heightMap[minX + j][minY + i]==1.45f) {
+                    if (heightMap[minX + j][minY + i] == 1.45f)
+                    {
                         isPrevConv = true;
                         isPrevTop = false;
                         isPrevBot = false;
@@ -747,7 +818,7 @@ public class TextureGenerator : MonoBehaviour
                         continue;
                     }
 
-                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i])<0)
+                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i]) < 0)
                     {
 
                         isPrevConv = false;
@@ -766,7 +837,8 @@ public class TextureGenerator : MonoBehaviour
                             isPrevTop = false;
                             isPrevBot = true;
                         }
-                        else {
+                        else
+                        {
                             isPrevConv = false;
                             isPrevTop = false;
                             isPrevBot = true;
@@ -778,10 +850,10 @@ public class TextureGenerator : MonoBehaviour
                 }
 
             }
-            
-            
-            
-            if(sum>maxSum)
+
+
+
+            if (sum > maxSum)
                 maxSum = sum;
 
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class SpeedConv : MonoBehaviour
 {
-    private static float speedConv = 0.35f;
+    private static float speedConv = 0.20f;
 
     public static float getSpeedConv()
     {
