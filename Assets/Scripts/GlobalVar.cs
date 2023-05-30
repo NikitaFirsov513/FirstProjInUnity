@@ -12,7 +12,8 @@ public class GlobalVar : MonoBehaviour
 
     private static bool isSpawn = true;
 
-    private static float borderVal = 1.421f;
+    //private static float borderVal = 1.421f;
+    private static float borderVal = 1.44f;
 
     private static float distanceToConv = 1.45f;
 

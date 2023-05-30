@@ -24,6 +24,7 @@ public class TextureGenerator : MonoBehaviour
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
         var texture = new Texture2D(width, height);
+        var testCenterTexture = new Texture2D(width, height);
         var pixels = new Color[width * height];
 
         for (var x = 0; x < width; x++)
@@ -40,15 +41,23 @@ public class TextureGenerator : MonoBehaviour
                 pixels[x + y * width] = new Color(value, value, value);
             }
         }
-        FindEggCout(heightMap, pixels);
+
+
+        Color[] testCenterPix = new Color[pixels.Length];
+        Array.Copy(pixels, testCenterPix, pixels.Length);
+
+        FindEggCout(heightMap, pixels, testCenterPix);
         //FindEggCoutV2(heightMap, pixels);
+
+        testCenterTexture.SetPixels(testCenterPix);
+        testCenterTexture.wrapMode = TextureWrapMode.Clamp;
+        testCenterTexture.Apply();
+        SaveToPng(testCenterTexture);
+
 
         texture.SetPixels(pixels);
         texture.wrapMode = TextureWrapMode.Clamp;
         texture.Apply();
-
-
-        //start fint egg count
         SaveToPng(texture);
 
         return texture;
@@ -114,7 +123,7 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
-    public static void FindEggCout(List<List<float>> heightMap, Color[] pixels)
+    public static void FindEggCout(List<List<float>> heightMap, Color[] pixels, Color[] testCenterPix)
     {
 
         //перебор масива
@@ -151,7 +160,7 @@ public class TextureGenerator : MonoBehaviour
                     pixels[x + y * width] = new Color(1f, 1f, 0);
 
                     if (!findPix.Contains(x + ":" + y))
-                        findPix = FindNextPix(heightMap, x, y, findPix, pixels);
+                        findPix = FindNextPix(heightMap, x, y, findPix, pixels, testCenterPix);
 
                 }
             }
@@ -169,8 +178,16 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
-    public static string FindNextPix(List<List<float>> heightMap, int startX, int startY, string findPix, Color[] pixels)
+    public static string FindNextPix(List<List<float>> heightMap, int startX, int startY, string findPix, Color[] pixels, Color[] testCenterPix)
     {
+
+
+
+
+
+
+        
+
         int nowX = startX, nowY = startY;
         int prevX = startX, prevY = startY;
         int minX = startX, maxX = startX;
@@ -690,7 +707,7 @@ public class TextureGenerator : MonoBehaviour
 
         Debug.Log(@"\--------DEBUG-MAS---------/");
 
-        TestCenterOfMass(minX, minY, mas, heightMap);
+        TestCenterOfMass(minX, minY, mas, heightMap, testCenterPix);
 
         return findPix + localCoord;
 
@@ -702,24 +719,25 @@ public class TextureGenerator : MonoBehaviour
 
 
 
-    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
+    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap,Color[] testCenterPix)
     {
 
 
 
-
+        int width = heightMap.Count - 1;
+        int height = heightMap[0].Count - 1;
 
 
 
 
         string str = "";
 
-        for (int i = mas.Count - 2; i >= 1; i--)
+        for (int i = mas.Count - 1; i >= 0; i--)
         {
 
 
 
-            for (int j = 1; j <= mas[i].Count - 2; j++)
+            for (int j = 0; j <= mas[i].Count - 1; j++)
             {
 
                 float val = heightMap[minX + j][minY + i];
@@ -739,9 +757,29 @@ public class TextureGenerator : MonoBehaviour
                 float valBotRight = heightMap[minX + j + 1][minY + i - 1];
 
 
-                str += (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
+                float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
+                power -= 17.75f;
+
+                if (power > 1f) {
+                    power = 1f;
+                }
+                if (power < 0f)
+                {
+                    power = 0f;
+                }
+                if (power > 0.5f)
+                {
+                    power = 1 - power;
+                }
+                else {
+                    power = 1 - power;
+                }
+                str += power;
                 str += " ";
+
+                testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
+
             }
             str += "\n";
 
@@ -750,7 +788,7 @@ public class TextureGenerator : MonoBehaviour
 
 
 
-
+        
 
         Debug.Log(@"/--------TestCenterOfMass---------\");
         Debug.Log(str);
