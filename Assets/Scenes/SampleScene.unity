@@ -6321,7 +6321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   go: {fileID: 3711697915795479555, guid: 0e79c5020c1266943b7d263d89f009e0, type: 3}
   spawnDelay: 0.75
-  spawnCol: 1
+  spawnCol: 5
 --- !u!4 &2127496332
 Transform:
   m_ObjectHideFlags: 0

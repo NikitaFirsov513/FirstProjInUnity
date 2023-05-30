@@ -32,26 +32,26 @@ public class HeightMap : MonoBehaviour
             return;
 
 
-        for (int i = 1; i < heightMap.Count - 2; i++) {
+        //for (int i = 1; i < heightMap.Count - 2; i++) {
 
-            int j = heightMap[i].Count-2;
-            float value = heightMap[i][j];
+        //    int j = heightMap[i].Count-2;
+        //    float value = heightMap[i][j];
 
-            if (heightMap[i][j + 1] > value &&
-                heightMap[i][j - 1] > value &&
-                heightMap[i + 1][j + 1] > value &&
-                heightMap[i + 1][j] > value &&
-                heightMap[i + 1][j - 1] > value &&
-                heightMap[i - 1][j + 1] > value &&
-                heightMap[i - 1][j] > value &&
-                heightMap[i - 1][j - 1] > value &&
-                value < GlobalVar.getBorderVal()
-                ) {
-                CalcEgg.addSum();
-            }
+        //    if (heightMap[i][j + 1] > value &&
+        //        heightMap[i][j - 1] > value &&
+        //        heightMap[i + 1][j + 1] > value &&
+        //        heightMap[i + 1][j] > value &&
+        //        heightMap[i + 1][j - 1] > value &&
+        //        heightMap[i - 1][j + 1] > value &&
+        //        heightMap[i - 1][j] > value &&
+        //        heightMap[i - 1][j - 1] > value &&
+        //        value < GlobalVar.getBorderVal()
+        //        ) {
+        //        CalcEgg.addSum();
+        //    }
 
 
-        }
+        //}
 
 
         TextureGenerator.UpdateImage(heightMap);

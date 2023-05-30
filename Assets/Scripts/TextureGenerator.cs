@@ -727,7 +727,7 @@ public class TextureGenerator : MonoBehaviour
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
 
-
+        List<List<float>> localMas = new List<List<float>>();
 
 
         string str = "";
@@ -735,7 +735,7 @@ public class TextureGenerator : MonoBehaviour
         for (int i = mas.Count - 1; i >= 0; i--)
         {
 
-
+            localMas.Add(new List<float>());
 
             for (int j = 0; j <= mas[i].Count - 1; j++)
             {
@@ -759,6 +759,11 @@ public class TextureGenerator : MonoBehaviour
 
                 float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
+                str += power;
+                str += " ";
+                localMas[mas.Count - 1 - i].Add(power);
+
+
                 power -= 17.75f;
 
                 if (power > 1f) {
@@ -775,10 +780,11 @@ public class TextureGenerator : MonoBehaviour
                 else {
                     power = 1 - power;
                 }
-                str += power;
-                str += " ";
+                //str += power;
+                //str += " ";
 
                 testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
+
 
             }
             str += "\n";
@@ -787,9 +793,48 @@ public class TextureGenerator : MonoBehaviour
 
 
 
+        for (int i = 1; i < localMas.Count-1; i++)
+        {
+            for (int j = 1; j < localMas[i].Count-1; j++)
+            {
+                float val = localMas[i][j];
 
-        
+                float valLeft = localMas[i - 1][j];
+                float valRight = localMas[i + 1][j];
 
+                float valTop = localMas[i][j + 1];
+                float valBot = localMas[i][j - 1];
+
+
+                float valTopLeft = localMas[i - 1][j + 1];
+                float valTopRight = localMas[i + 1][j + 1];
+
+
+                float valBotLeft = localMas[i - 1][j - 1];
+                float valBotRight = localMas[i + 1][j - 1];
+
+                //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
+
+
+                if (val < valLeft &&
+                   val < valRight &&
+                   val < valTop &&
+                   val < valBot &&
+                   val < valTopLeft &&
+                   val < valTopRight &&
+                   val < valBotLeft &&
+                   val < valBotRight)
+                {
+                    
+                    CalcEgg.addSum();
+                    testCenterPix[(minX  + j)  + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
+
+                }
+
+            }
+
+
+        }
         Debug.Log(@"/--------TestCenterOfMass---------\");
         Debug.Log(str);
         Debug.Log(@"\--------TestCenterOfMass---------/");
