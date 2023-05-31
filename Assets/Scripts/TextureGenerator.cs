@@ -186,7 +186,7 @@ public class TextureGenerator : MonoBehaviour
 
 
 
-        
+
 
         int nowX = startX, nowY = startY;
         int prevX = startX, prevY = startY;
@@ -718,8 +718,20 @@ public class TextureGenerator : MonoBehaviour
 
 
 
+    struct Coord
+    {
 
-    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap,Color[] testCenterPix)
+        public int x;
+        public int y;
+
+        public Coord(int xNew, int yNew)
+        {
+            x = xNew;
+            y = yNew;
+        }
+    }
+
+    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
     {
 
 
@@ -728,7 +740,7 @@ public class TextureGenerator : MonoBehaviour
         int height = heightMap[0].Count - 1;
 
         List<List<float>> localMas = new List<List<float>>();
-
+        List<Coord> listCoord = new List<Coord>();
 
         string str = "";
 
@@ -757,31 +769,40 @@ public class TextureGenerator : MonoBehaviour
                 float valBotRight = heightMap[minX + j + 1][minY + i - 1];
 
 
-                float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
+                //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
+
+                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
+
+                //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
+
+                power = (1.45f - power) * 20;
+
                 str += power;
                 str += " ";
                 localMas[mas.Count - 1 - i].Add(power);
 
 
-                power -= 17.75f;
+                //power -= 17.75f;
 
-                if (power > 1f) {
-                    power = 1f;
-                }
-                if (power < 0f)
-                {
-                    power = 0f;
-                }
-                if (power > 0.5f)
-                {
-                    power = 1 - power;
-                }
-                else {
-                    power = 1 - power;
-                }
+                //if (power > 1f) {
+                //    power = 1f;
+                //}
+                //if (power < 0f)
+                //{
+                //    power = 0f;
+                //}
+                //if (power > 0.5f)
+                //{
+                //    power = 1 - power;
+                //}
+                //else {
+                //    power = 1 - power;
+                //}
                 //str += power;
                 //str += " ";
+
+                //
 
                 testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
 
@@ -793,9 +814,9 @@ public class TextureGenerator : MonoBehaviour
 
 
 
-        for (int i = 1; i < localMas.Count-1; i++)
+        for (int i = 1; i < localMas.Count - 1; i++)
         {
-            for (int j = 1; j < localMas[i].Count-1; j++)
+            for (int j = 1; j < localMas[i].Count - 1; j++)
             {
                 float val = localMas[i][j];
 
@@ -814,21 +835,30 @@ public class TextureGenerator : MonoBehaviour
                 float valBotRight = localMas[i + 1][j - 1];
 
                 //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
+                bool isFindInList = false;
 
-
-                if (val < valLeft &&
-                   val < valRight &&
-                   val < valTop &&
-                   val < valBot &&
-                   val < valTopLeft &&
-                   val < valTopRight &&
-                   val < valBotLeft &&
-                   val < valBotRight)
+                foreach (Coord elem in listCoord)
                 {
-                    
-                    CalcEgg.addSum();
-                    testCenterPix[(minX  + j)  + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
+                    if (Math.Abs(elem.x - j) <= 2 && Math.Abs(elem.y - i) <= 2)
+                        isFindInList = true;
 
+                }
+
+
+                if (val > valLeft &&
+               val > valRight &&
+               val > valTop &&
+               val > valBot &&
+               val > valTopLeft &&
+               val > valTopRight &&
+               val > valBotLeft &&
+               val > valBotRight &&
+               val > 0.15&&
+               !isFindInList)
+                {
+                    CalcEgg.addSum();
+                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
+                    listCoord.Add(new Coord(j, i));
                 }
 
             }
@@ -847,6 +877,24 @@ public class TextureGenerator : MonoBehaviour
 
         return 0;
     }
+
+    public static float MedialFilter(float val, float valLeft, float valRight, float valTop, float valBot, float valTopLeft, float valTopRight, float valBotLeft, float valBotRight)
+    {
+
+        float[] mas = new float[] { val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight };
+        float min = 2f;
+        foreach (float a in mas)
+        {
+            if (a < min)
+            {
+                // найден больший элемент
+                min = a;
+            }
+        }
+
+        return min;
+    }
+
 
     public static int FindEggByHeight(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
     {
@@ -1124,3 +1172,151 @@ public class TextureGenerator : MonoBehaviour
 
     }
 }
+/*
+ public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
+{
+
+
+
+    int width = heightMap.Count - 1;
+    int height = heightMap[0].Count - 1;
+
+    List<List<float>> localMas = new List<List<float>>();
+    List<Coord> listCoord = new List<Coord>();
+
+    string str = "";
+
+    for (int i = mas.Count - 1; i >= 0; i--)
+    {
+
+        localMas.Add(new List<float>());
+
+        for (int j = 0; j <= mas[i].Count - 1; j++)
+        {
+
+            float val = heightMap[minX + j][minY + i];
+
+            float valLeft = heightMap[minX + j - 1][minY + i];
+            float valRight = heightMap[minX + j + 1][minY + i];
+
+            float valTop = heightMap[minX + j][minY + i + 1];
+            float valBot = heightMap[minX + j][minY + i - 1];
+
+
+            float valTopLeft = heightMap[minX + j - 1][minY + i + 1];
+            float valTopRight = heightMap[minX + j + 1][minY + i + 1];
+
+
+            float valBotLeft = heightMap[minX + j - 1][minY + i - 1];
+            float valBotRight = heightMap[minX + j + 1][minY + i - 1];
+
+
+            //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
+            //Math.Pow
+
+            float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
+
+            //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
+
+            power = (1.45f - power) * 20;
+
+            str += power;
+            str += " ";
+            localMas[mas.Count - 1 - i].Add(power);
+
+
+            //power -= 17.75f;
+
+            //if (power > 1f) {
+            //    power = 1f;
+            //}
+            //if (power < 0f)
+            //{
+            //    power = 0f;
+            //}
+            //if (power > 0.5f)
+            //{
+            //    power = 1 - power;
+            //}
+            //else {
+            //    power = 1 - power;
+            //}
+            //str += power;
+            //str += " ";
+
+            //
+
+            testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
+
+
+        }
+        str += "\n";
+
+    }
+
+
+
+    for (int i = 1; i < localMas.Count - 1; i++)
+    {
+        for (int j = 1; j < localMas[i].Count - 1; j++)
+        {
+            float val = localMas[i][j];
+
+            float valLeft = localMas[i - 1][j];
+            float valRight = localMas[i + 1][j];
+
+            float valTop = localMas[i][j + 1];
+            float valBot = localMas[i][j - 1];
+
+
+            float valTopLeft = localMas[i - 1][j + 1];
+            float valTopRight = localMas[i + 1][j + 1];
+
+
+            float valBotLeft = localMas[i - 1][j - 1];
+            float valBotRight = localMas[i + 1][j - 1];
+
+            //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
+            bool isFindInList = false;
+
+            foreach (Coord elem in listCoord)
+            {
+                if (Math.Abs(elem.x - j) <= 3 && Math.Abs(elem.y - i) <= 3)
+                    isFindInList = true;
+
+            }
+
+
+            if (val > valLeft &&
+           val > valRight &&
+           val > valTop &&
+           val > valBot &&
+           val > valTopLeft &&
+           val > valTopRight &&
+           val > valBotLeft &&
+           val > valBotRight &&
+           val > 0.15&&
+           !isFindInList)
+            {
+                CalcEgg.addSum();
+                testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
+                listCoord.Add(new Coord(j, i));
+            }
+
+        }
+
+
+    }
+    Debug.Log(@"/--------TestCenterOfMass---------\");
+    Debug.Log(str);
+    Debug.Log(@"\--------TestCenterOfMass---------/");
+
+
+
+
+
+
+
+    return 0;
+}
+*/
