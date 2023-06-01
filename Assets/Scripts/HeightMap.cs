@@ -32,6 +32,16 @@ public class HeightMap : MonoBehaviour
             return;
 
 
+        //for (int i = 3; i < heightMap.Count - 1; i++)
+        //{
+        //    int length = heightMap[i].Count-1;
+
+        //    heightMap[i][length] = (heightMap[i][length] + heightMap[i][length] + heightMap[i - 1][length] ) / 3;
+
+
+
+        //}
+
         //for (int i = 1; i < heightMap.Count - 2; i++) {
 
         //    int j = heightMap[i].Count-2;

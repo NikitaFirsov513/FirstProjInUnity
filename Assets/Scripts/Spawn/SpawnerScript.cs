@@ -29,8 +29,8 @@ public class SpawnerScript : MonoBehaviour
             for (int i = 0; i < spawnCol; i++) {
                 randomX = Random.Range(-(width-0.5f)/2, (width - 0.5f)/ 2);
 
-                randomScale = Random.Range(0.88f, 1.12f);
-                //randomScale = Random.Range(0.88f, 0.89f);
+                //randomScale = Random.Range(0.88f, 1.12f);
+                randomScale = Random.Range(0.88f, 0.89f);
 
                 //randomScale = Random.Range(1.11f, 1.12f);
                 float rotateEgg = Random.Range(0.0f, 360.0f);

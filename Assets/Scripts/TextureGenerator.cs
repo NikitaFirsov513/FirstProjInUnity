@@ -25,6 +25,8 @@ public class TextureGenerator : MonoBehaviour
         int height = heightMap[0].Count - 1;
         var texture = new Texture2D(width, height);
         var testCenterTexture = new Texture2D(width, height);
+        var defaultTexture = new Texture2D(width, height);
+
         var pixels = new Color[width * height];
 
         for (var x = 0; x < width; x++)
@@ -42,6 +44,10 @@ public class TextureGenerator : MonoBehaviour
             }
         }
 
+        defaultTexture.SetPixels(pixels);
+        defaultTexture.wrapMode = TextureWrapMode.Clamp;
+        defaultTexture.Apply();
+        SaveToPng(defaultTexture);
 
         Color[] testCenterPix = new Color[pixels.Length];
         Array.Copy(pixels, testCenterPix, pixels.Length);
@@ -772,13 +778,15 @@ public class TextureGenerator : MonoBehaviour
                 //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
 
-                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
+//                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
+
+                float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
 
                 //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
 
                 power = (1.45f - power) * 20;
 
-                str += power;
+                str += (power - power%0.001)*1000;
                 str += " ";
                 localMas[mas.Count - 1 - i].Add(power);
 
@@ -802,10 +810,12 @@ public class TextureGenerator : MonoBehaviour
                 //str += power;
                 //str += " ";
 
-                //
+                //if (power > 0.6f)
+                //    testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
+                //else
+                //    testCenterPix[minX + j + (minY + i) * width] = new Color(0f, 0f, 0f);
 
                 testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
-
 
             }
             str += "\n";
@@ -835,14 +845,7 @@ public class TextureGenerator : MonoBehaviour
                 float valBotRight = localMas[i + 1][j - 1];
 
                 //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
-                bool isFindInList = false;
-
-                foreach (Coord elem in listCoord)
-                {
-                    if (Math.Abs(elem.x - j) <= 2 && Math.Abs(elem.y - i) <= 2)
-                        isFindInList = true;
-
-                }
+                
 
 
                 if (val > valLeft &&
@@ -853,8 +856,7 @@ public class TextureGenerator : MonoBehaviour
                val > valTopRight &&
                val > valBotLeft &&
                val > valBotRight &&
-               val > 0.15&&
-               !isFindInList)
+               val > 0.15)
                 {
                     CalcEgg.addSum();
                     testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
