@@ -17,7 +17,7 @@ public class GlobalVar : MonoBehaviour
 
     private static float distanceToConv = 1.45f;
 
-    private static float noise = 0.005f;
+    private static float noise = 0.0030f;
 
     public static float getMinDistance()
     {

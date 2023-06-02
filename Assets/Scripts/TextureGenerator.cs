@@ -778,15 +778,17 @@ public class TextureGenerator : MonoBehaviour
                 //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
 
-//                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
+                //                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
 
                 float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
+                //float power = (val + valLeft*2 + valRight*2 + valTop*2 + valBot*2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 13;
 
                 //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
 
                 power = (1.45f - power) * 20;
 
-                str += (power - power%0.001)*1000;
+                //str += (power - power%0.001)*1000;
+                str += power;
                 str += " ";
                 localMas[mas.Count - 1 - i].Add(power);
 
