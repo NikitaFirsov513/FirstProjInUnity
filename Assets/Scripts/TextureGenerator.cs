@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -713,7 +714,8 @@ public class TextureGenerator : MonoBehaviour
 
         Debug.Log(@"\--------DEBUG-MAS---------/");
 
-        TestCenterOfMass(minX, minY, mas, heightMap, testCenterPix);
+        //TestCenterOfMass(minX, minY, mas, heightMap, testCenterPix);
+        MethodOtsu(minX, minY, mas, heightMap, testCenterPix);
 
         return findPix + localCoord;
 
@@ -721,7 +723,171 @@ public class TextureGenerator : MonoBehaviour
 
 
     }
+    struct Bright
+    {
 
+        public float val;
+        public float col;
+        public float Pk;
+
+
+        public Bright(float val, float col, float Pk)
+        {
+            this.val = val;
+            this.col = col;
+            this.Pk = Pk;
+        }
+        public void setCol(float col)
+        {
+            this.col = col;
+
+        }
+        public float getCol()
+        {
+            return this.col;
+
+        }
+        public void setPk(float Pk)
+        {
+            this.Pk = Pk;
+
+        }
+
+        public string toString()
+        {
+            return "val>" + val + "\tcol>" + col + "\tPk>" + Pk;
+
+        }
+    }
+    public static int MethodOtsu(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
+    {
+        List<List<float>> localMas = new List<List<float>>();
+
+        int width = heightMap.Count - 1;
+        int height = heightMap[0].Count - 1;
+
+        var listBright = new List<Bright>();
+        float colPix = (mas.Count * mas[0].Count);
+        //string str = "";
+
+
+        for (int i = mas.Count - 1; i >= 0; i--)
+        {
+            localMas.Add(new List<float>());
+
+            for (int j = 0; j <= mas[i].Count - 1; j++)
+            {
+                float power = heightMap[minX + j][minY + i];
+
+                power = (1.45f + GlobalVar.getNoise() - power) * 20;
+
+                localMas[mas.Count - 1 - i].Add(power);
+
+                listBright.Exists(x => x.val == power);
+                if (listBright.Exists(x => x.val == power))
+                {
+                    var elem = listBright.Find(x => x.val == power);
+                    elem.setCol(elem.getCol() + 1f);
+                    //elem.setPk(elem.getCol() / colPix);
+
+                }
+                else
+                {
+                    listBright.Add(new Bright(power, 1f, 0f));
+                    var elem = listBright.Find(x => x.val == power);
+                    //elem.setPk(elem.getCol() / colPix);
+
+                }
+
+
+
+            }
+        }
+
+
+        listBright = listBright.OrderBy(o => o.val).ToList();
+        float O2B = float.MinValue;
+        int maxK = 0;
+        float ipiG = 0;
+        for (int i = 0; i <= listBright.Count - 1; i++)
+        {
+            float P1k = 0;
+            float P2k = 0;
+
+            float ip1i = 0;
+            float ip2i = 0;
+
+            ipiG += i * listBright[i].getCol() / colPix;
+
+            for (int j = 0; j <= i; j++)
+            {
+                P1k += listBright[j].getCol() / colPix;
+                ip1i += j * listBright[j].getCol() / colPix;
+            }
+
+            for (int k = listBright.Count - i; k <= listBright.Count - 1; k++)
+            {
+                P2k += listBright[k].getCol() / colPix;
+                ip2i += k * listBright[k].getCol() / colPix;
+            }
+
+
+
+
+            float m1k = ip1i / P1k;
+            float m2k = ip2i / P2k;
+
+            float o2b = P1k * P2k * (m1k - m2k) * (m1k - m2k);
+
+            Debug.Log("P1k>" + P1k);
+            Debug.Log("P2k>" + P2k);
+
+            Debug.Log("m1k>" + m1k);
+            Debug.Log("m2k>" + m2k);
+
+            Debug.Log("o2b>" + o2b);
+
+            if (O2B < o2b)
+            {
+                O2B = o2b;
+                maxK = i;
+            }
+
+        }
+
+        Debug.Log("MAX O2B>" + O2B);
+        Debug.Log("MAX K>" + maxK);
+        Debug.Log("VAL>" + listBright[maxK].val);
+
+
+        Debug.Log("ipiG>" + ipiG);
+
+
+        for (int i = 0; i <= localMas.Count - 1; i++)
+        {
+            for (int j = 0; j <= localMas[i].Count - 1; j++)
+            {
+                float val = localMas[i][j];
+
+
+                if (val >= listBright[maxK].val)
+                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 1f, 1f);
+                else
+                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+        return 0;
+    }
 
 
     struct Coord
@@ -778,9 +944,9 @@ public class TextureGenerator : MonoBehaviour
                 //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
                 //Math.Pow
 
-                //                float power = (val*4 + valLeft*2 + valRight*2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
+                float power = (val * 4 + valLeft * 2 + valRight * 2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
 
-                float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
+                //float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
                 //float power = (val + valLeft*2 + valRight*2 + valTop*2 + valBot*2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 13;
 
                 //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
@@ -847,7 +1013,7 @@ public class TextureGenerator : MonoBehaviour
                 float valBotRight = localMas[i + 1][j - 1];
 
                 //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
-                
+
 
 
                 if (val > valLeft &&
