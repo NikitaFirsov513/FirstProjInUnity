@@ -7,7 +7,7 @@ public class GenerateBtnActions : MonoBehaviour
     // Start is called before the first frame update
     public void generate() {
 
-        TextureGenerator.GetTexture(HeightMap.getMass());
-    
+        //TextureGenerator.GetTexture(HeightMap.getMass());
+        ImageProcessing.Start(HeightMap.getMass());
     }
 }

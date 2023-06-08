@@ -7,81 +7,49 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.XR;
-using static UnityEditor.ShaderData;
-//using System.Diagnostics;
-using static UnityEngine.GraphicsBuffer;
 
-public class TextureGenerator : MonoBehaviour
+public class ImageProcessing : MonoBehaviour
 {
     // Start is called before the first frame update
-
-    public Texture2D tex;
-
-    public static Texture2D GetTexture(List<List<float>> heightMap)
+    public static void Start(List<List<float>> heightMap)
     {
-        float borderVal = GlobalVar.getBorderVal();
 
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
-        var texture = new Texture2D(width, height);
-        var testCenterTexture = new Texture2D(width, height);
-        var defaultTexture = new Texture2D(width, height);
 
-        var pixels = new Color[width * height];
+        Color[] initPixels = GenerateDefaultImage(heightMap, width, height);
 
-        for (var x = 0; x < width; x++)
-        {
-            for (var y = 0; y < height; y++)
-            {
-                float value = heightMap[x][y];
+        //копирование для обработки
+        Color[] onePixels = new Color[width * height];
+        initPixels.CopyTo(onePixels, 0);
+        float maxValue = GlobalVar.getMinDistance();
 
-                if (value >= borderVal)
-                    value = 0;
-                else
-                    value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
+        onePixels = FindAllContour(heightMap, onePixels, maxValue, 1);
 
-                pixels[x + y * width] = new Color(value, value, value);
-            }
-        }
-
-        defaultTexture.SetPixels(pixels);
-        defaultTexture.wrapMode = TextureWrapMode.Clamp;
-        defaultTexture.Apply();
-        SaveToPng(defaultTexture);
-
-        Color[] testCenterPix = new Color[pixels.Length];
-        Array.Copy(pixels, testCenterPix, pixels.Length);
-
-        FindEggCout(heightMap, pixels, testCenterPix);
-        //FindEggCoutV2(heightMap, pixels);
-
-        testCenterTexture.SetPixels(testCenterPix);
-        testCenterTexture.wrapMode = TextureWrapMode.Clamp;
-        testCenterTexture.Apply();
-        SaveToPng(testCenterTexture);
+        SaveToPng(onePixels, "onePixels", width, height);
 
 
-        texture.SetPixels(pixels);
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.Apply();
-        SaveToPng(texture);
 
-        return texture;
+        Color[] twoPixels = new Color[width * height];
+        initPixels.CopyTo(twoPixels, 0);
+
+        twoPixels = FindAllContour(heightMap, twoPixels, maxValue, 2);
+
+        SaveToPng(twoPixels, "twoPixels", width, height);
+
+
     }
-    public static void FindEggCoutV2(List<List<float>> heightMap, Color[] pixels)
-    {
 
+
+    public static Color[] FindAllContour(List<List<float>> heightMap, Color[] pixels, float maxValue, int colOtsu = 0)
+    {
 
         int width = heightMap.Count - 1;
         int height = heightMap[0].Count - 1;
-        int count = 0;
-        float borderVal = GlobalVar.getBorderVal();
         string findPix = "";
 
         System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
         stopWatch.Start();
-
 
 
 
@@ -91,87 +59,37 @@ public class TextureGenerator : MonoBehaviour
             {
 
 
-                //float value = heightMap[y][x];
 
-                if (heightMap[x][y] > borderVal)
+                if (heightMap[x][y] > maxValue)
                     continue;
 
-                float left = heightMap[x - 1][y];
-                float left_bot = heightMap[x - 1][y - 1];
-                float bot = heightMap[x - 1][y - 1];
-                float right_bot = heightMap[x - 1][y - 1];
-
-                if (heightMap[x - 1][y] > borderVal &&
-                    heightMap[x - 1][y - 1] > borderVal &&
-                    heightMap[x][y - 1] > borderVal &&
-                    heightMap[x + 1][y - 1] > borderVal &&
-                    heightMap[x + 2][y - 1] > borderVal)
+                if (heightMap[x - 1][y] > maxValue &&
+                    heightMap[x - 1][y - 1] > maxValue &&
+                    heightMap[x][y - 1] > maxValue &&
+                    heightMap[x + 1][y - 1] > maxValue &&
+                    heightMap[x + 2][y - 1] > maxValue)
                 {
 
-                    pixels[x + y * width] = new Color(1f, 1f, 0);
-                    count++;
-
-                }
-            }
-        }
-
-
-
-        stopWatch.Stop();
-        TimeSpan ts = stopWatch.Elapsed;
-        string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
-            ts.Hours, ts.Minutes, ts.Seconds,
-            ts.Milliseconds / 10);
-
-        Debug.Log("COUNT>" + count);
-        Debug.Log("RunTime>" + elapsedTime);
-
-
-
-
-    }
-    public static void FindEggCout(List<List<float>> heightMap, Color[] pixels, Color[] testCenterPix)
-    {
-
-        //перебор масива
-        //если левый нижний, то идем по контуру
-        //что обходим красим в красное
-        //если дошли до начальной точки, то делаем заново
-        int width = heightMap.Count - 1;
-        int height = heightMap[0].Count - 1;
-        string findPix = "";
-
-        System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
-        stopWatch.Start();
-
-
-        float minDistance = GlobalVar.getMinDistance();
-
-        for (int y = 1; y < height; y++)
-        {
-            for (int x = 1; x < width; x++)
-            {
-
-
-
-                if (heightMap[x][y] > minDistance)
-                    continue;
-
-                if (heightMap[x - 1][y] > minDistance &&
-                    heightMap[x - 1][y - 1] > minDistance &&
-                    heightMap[x][y - 1] > minDistance &&
-                    heightMap[x + 1][y - 1] > minDistance &&
-                    heightMap[x + 2][y - 1] > minDistance)
-                {
-
-                    pixels[x + y * width] = new Color(1f, 1f, 0);
+                    //pixels[x + y * width] = new Color(1f, 1f, 0);
 
                     if (!findPix.Contains(x + ":" + y))
-                        findPix = FindNextPix(heightMap, x, y, findPix, pixels, testCenterPix);
+                    {
+                        //доделать
+                        findPix = FindNextPix(heightMap, pixels, x, y, findPix,colOtsu);
+
+                    }
 
                 }
             }
         }
+
+
+
+
+
+
+
+
 
 
 
@@ -184,15 +102,14 @@ public class TextureGenerator : MonoBehaviour
 
 
 
+
+
+        return pixels;
     }
-    public static string FindNextPix(List<List<float>> heightMap, int startX, int startY, string findPix, Color[] pixels, Color[] testCenterPix)
+    //Генерация изначального изображения
+
+    public static string FindNextPix(List<List<float>> heightMap, Color[] pixels, int startX, int startY, string findPix, int colOtsu = 0)
     {
-
-
-
-
-
-
 
 
         int nowX = startX, nowY = startY;
@@ -690,32 +607,24 @@ public class TextureGenerator : MonoBehaviour
 
         Debug.Log(@"\--------MAS---------/");
 
+
+        for (int i = 0; i < colOtsu; i++)
+        {
+
+
+
+
+            //Вызов метода Оцу
+            MethodOtsu(minX, minY, mas, heightMap, pixels);
+        }
+
+
+
         //int S = CalcSquare(mas);
         //Debug.Log("SQUARE>" + S);
         //Debug.Log("EGG>" + S / 18);
         //доделать скрипт распознования количества яиц
         //CalcEgg.addSum(S / 15);
-
-        Debug.Log(@"/--------DEBUG-MAS---------\");
-
-        //for (int i = mas.Count - 1; i >= 0; i--)
-        //{
-
-        //    string str = "";
-        //    for (int j = 0; j <= mas[0].Count - 1; j++)
-        //    {
-        //        str += heightMap[minX + j][minY + i] +" ";
-
-        //    }
-        //    Debug.Log(str );
-        //}
-
-        FindEggByHeight(minX, minY, mas, heightMap);
-
-        Debug.Log(@"\--------DEBUG-MAS---------/");
-
-        //TestCenterOfMass(minX, minY, mas, heightMap, testCenterPix);
-        MethodOtsu(minX, minY, mas, heightMap, testCenterPix);
 
         return findPix + localCoord;
 
@@ -759,6 +668,9 @@ public class TextureGenerator : MonoBehaviour
 
         }
     }
+
+
+    //изменить метод он не должен менять пиксели
     public static int MethodOtsu(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
     {
         List<List<float>> localMas = new List<List<float>>();
@@ -869,379 +781,23 @@ public class TextureGenerator : MonoBehaviour
             {
                 float val = localMas[i][j];
 
-                if (val >= 0.75f)
-                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 1f, 1f);
-                else
-                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
-
-
-                //if (val >= listBright[maxK].val)
+                //if (val >= 0.75f)
                 //    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 1f, 1f);
                 //else
                 //    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
 
-            }
-        }
 
-
-
-
-
-
-
-
-
-        return 0;
-    }
-
-
-    struct Coord
-    {
-
-        public int x;
-        public int y;
-
-        public Coord(int xNew, int yNew)
-        {
-            x = xNew;
-            y = yNew;
-        }
-    }
-
-    public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
-    {
-
-
-
-        int width = heightMap.Count - 1;
-        int height = heightMap[0].Count - 1;
-
-        List<List<float>> localMas = new List<List<float>>();
-        List<Coord> listCoord = new List<Coord>();
-
-        string str = "";
-
-        for (int i = mas.Count - 1; i >= 0; i--)
-        {
-
-            localMas.Add(new List<float>());
-
-            for (int j = 0; j <= mas[i].Count - 1; j++)
-            {
-
-                float val = heightMap[minX + j][minY + i];
-
-                float valLeft = heightMap[minX + j - 1][minY + i];
-                float valRight = heightMap[minX + j + 1][minY + i];
-
-                float valTop = heightMap[minX + j][minY + i + 1];
-                float valBot = heightMap[minX + j][minY + i - 1];
-
-
-                float valTopLeft = heightMap[minX + j - 1][minY + i + 1];
-                float valTopRight = heightMap[minX + j + 1][minY + i + 1];
-
-
-                float valBotLeft = heightMap[minX + j - 1][minY + i - 1];
-                float valBotRight = heightMap[minX + j + 1][minY + i - 1];
-
-
-                //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
-                //Math.Pow
-
-                float power = (val * 4 + valLeft * 2 + valRight * 2 + valTop * 2 + valBot * 2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 16;
-
-                //float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
-                //float power = (val + valLeft*2 + valRight*2 + valTop*2 + valBot*2 + valTopLeft + valTopRight + valBotLeft + valBotRight) / 13;
-
-                //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
-
-                power = (1.45f - power) * 20;
-
-                //str += (power - power%0.001)*1000;
-                str += power;
-                str += " ";
-                localMas[mas.Count - 1 - i].Add(power);
-
-
-                //power -= 17.75f;
-
-                //if (power > 1f) {
-                //    power = 1f;
-                //}
-                //if (power < 0f)
-                //{
-                //    power = 0f;
-                //}
-                //if (power > 0.5f)
-                //{
-                //    power = 1 - power;
-                //}
-                //else {
-                //    power = 1 - power;
-                //}
-                //str += power;
-                //str += " ";
-
-                //if (power > 0.6f)
-                //    testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
-                //else
-                //    testCenterPix[minX + j + (minY + i) * width] = new Color(0f, 0f, 0f);
-
-                testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
-
-            }
-            str += "\n";
-
-        }
-
-
-
-        for (int i = 1; i < localMas.Count - 1; i++)
-        {
-            for (int j = 1; j < localMas[i].Count - 1; j++)
-            {
-                float val = localMas[i][j];
-
-                float valLeft = localMas[i - 1][j];
-                float valRight = localMas[i + 1][j];
-
-                float valTop = localMas[i][j + 1];
-                float valBot = localMas[i][j - 1];
-
-
-                float valTopLeft = localMas[i - 1][j + 1];
-                float valTopRight = localMas[i + 1][j + 1];
-
-
-                float valBotLeft = localMas[i - 1][j - 1];
-                float valBotRight = localMas[i + 1][j - 1];
-
-                //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
-
-
-
-                if (val > valLeft &&
-               val > valRight &&
-               val > valTop &&
-               val > valBot &&
-               val > valTopLeft &&
-               val > valTopRight &&
-               val > valBotLeft &&
-               val > valBotRight &&
-               val > 0.15)
-                {
-                    CalcEgg.addSum();
-                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
-                    listCoord.Add(new Coord(j, i));
-                }
-
-            }
-
-
-        }
-        Debug.Log(@"/--------TestCenterOfMass---------\");
-        Debug.Log(str);
-        Debug.Log(@"\--------TestCenterOfMass---------/");
-
-
-
-
-
-
-
-        return 0;
-    }
-
-    public static float MedialFilter(float val, float valLeft, float valRight, float valTop, float valBot, float valTopLeft, float valTopRight, float valBotLeft, float valBotRight)
-    {
-
-        float[] mas = new float[] { val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight };
-        float min = 2f;
-        foreach (float a in mas)
-        {
-            if (a < min)
-            {
-                // найден больший элемент
-                min = a;
-            }
-        }
-
-        return min;
-    }
-
-
-    public static int FindEggByHeight(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap)
-    {
-
-        int maxSum = 0;
-        bool isPrevConv = false;
-        bool isPrevTop = false;
-        bool isPrevBot = false;
-
-
-
-        for (int i = mas.Count - 1; i >= 0; i--)
-        {
-
-            string str = "";
-            int sum = 0;
-            for (int j = 0; j <= mas[i].Count - 1; j++)
-            {
-                str += heightMap[minX + j][minY + i] + " ";
-
-                if (j == 0)
-                {
-                    switch (heightMap[minX + j][minY + i])
-                    {
-                        case 1.45f:
-                            {
-                                isPrevConv = true;
-                                isPrevTop = false;
-                                isPrevBot = false;
-                                break;
-                            }
-                        default:
-                            {
-                                isPrevConv = false;
-                                isPrevTop = true;
-                                isPrevBot = false;
-                                break;
-                            }
-                    }
-                }
+                if (val >= listBright[maxK].val)
+                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(val, val, val);
                 else
-                {
-                    float now = heightMap[minX + j][minY + i];
-
-                    float prev = heightMap[minX + j - 1][minY + i];
-                    if (heightMap[minX + j][minY + i] == 1.45f)
-                    {
-                        isPrevConv = true;
-                        isPrevTop = false;
-                        isPrevBot = false;
-
-                        continue;
-                    }
-
-                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i]) < 0)
-                    {
-
-                        isPrevConv = false;
-                        isPrevTop = true;
-                        isPrevBot = false;
-
-                    }
-                    if ((heightMap[minX + j][minY + i] - heightMap[minX + j - 1][minY + i]) > 0)
-                    {
-
-                        if (isPrevTop)
-                        {
-                            sum++;
-
-                            isPrevConv = false;
-                            isPrevTop = false;
-                            isPrevBot = true;
-                        }
-                        else
-                        {
-                            isPrevConv = false;
-                            isPrevTop = false;
-                            isPrevBot = true;
-                        }
-
-                    }
-
-
-                }
-
+                    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
             }
-
-
-
-            if (sum > maxSum)
-                maxSum = sum;
-
-
-
-            Debug.Log(str);
         }
-        Debug.Log("SUM>" + maxSum);
+
         return 0;
-
-
-
     }
-    public static int CalcSquare(List<List<int>> mas)
-    {
-
-        int maxX = mas[0].Count;
-        int maxY = mas.Count;
-        int S = 0;
-        for (int y = 0; y < maxY; y++)
-        {
-
-            for (int x = 0; x < maxX; x++)
-            {
-
-                int element = mas[y][x];
-
-                if (element == 1)
-                {
-                    S++;
-                }
-                if (element != 1)
-                {
-                    //тут могли бы быть ваши циклы...
-                    bool isLeftFind = false;
-                    bool isRightFind = false;
-                    bool isTopFind = false;
-                    bool isBotFind = false;
-
-                    for (int leftX = x; leftX >= 0; leftX--)
-                    {
-                        if (mas[y][leftX] == 1)
-                        {
-                            isLeftFind = true;
-                            break;
-                        }
-                    }
-
-                    for (int rightX = x; rightX < maxX; rightX++)
-                    {
-                        if (mas[y][rightX] == 1)
-                        {
-                            isRightFind = true;
-                            break;
-                        }
-                    }
-                    for (int topY = y; topY < maxY; topY++)
-                    {
-                        if (mas[topY][x] == 1)
-                        {
-                            isTopFind = true;
-                            break;
-                        }
-
-                    }
-                    for (int botY = y; botY >= 0; botY--)
-                    {
-                        if (mas[botY][x] == 1)
-                        {
-                            isBotFind = true;
-                            break;
-                        }
-                    }
-
-                    if (isLeftFind && isRightFind && isTopFind && isBotFind) S++;
-                }
-            }
-
-        }
 
 
-        return S;
-    }
     //метод "заполнить значениями"
     //вход: длинна массива, индекс 1ци
     public static List<int> CreateMass(int length, int index = -1)
@@ -1288,210 +844,58 @@ public class TextureGenerator : MonoBehaviour
         return true;
     }
 
-    public static void SaveToPng(Texture2D texture)
+
+    public static Color[] GenerateDefaultImage(List<List<float>> heightMap, int width, int height)
     {
+
+        string name = "DefaultImage";
+
+        //power = (1.45f + GlobalVar.getNoise() - power) * 20;
+
+
+        float borderVal = GlobalVar.getBorderVal();
+
+        Color[] pixels = new Color[width * height];
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                float value = heightMap[x][y];
+
+                if (value >= borderVal)
+                    value = 0;
+                else
+                    value = (1.45f + GlobalVar.getNoise() - value) * 20;
+                //value = (((1.45f - value) * 1000) - 20f) / 0.003f / 10000;
+
+                pixels[x + y * width] = new Color(value, value, value);
+            }
+        }
+
+        SaveToPng(pixels, name, width, height);
+        return pixels;
+    }
+
+
+
+
+    public static void SaveToPng(Color[] pixels, string name, int width, int height)
+    {
+        Texture2D texture = new Texture2D(width, height);
+        texture.SetPixels(pixels);
+        texture.wrapMode = TextureWrapMode.Clamp;
+        texture.Apply();
         byte[] bytes = texture.EncodeToPNG();
 
 
         var path = EditorUtility.SaveFilePanel(
                     "Save texture as PNG",
                     "",
-                    "Image.png",
+                    name,
                     "png");
 
         File.WriteAllBytes(path, bytes);
 
     }
-
-
-    public static void UpdateImage(List<List<float>> heightMap)
-    {
-
-        RawImage image = GameObject.Find("RawImage").GetComponent<RawImage>();
-
-
-        float borderVal = GlobalVar.getBorderVal();
-        int width = heightMap.Count - 1;
-        int height = heightMap[0].Count - 1;
-        var texture = new Texture2D(width, 200);
-        var pixels = new Color[width * 200];
-
-        for (var x = 0; x < width; x++)
-        {
-            for (var y = 0; y < 200; y++)
-            {
-
-                if (y > 200 || y > heightMap[0].Count - 1) break;
-
-                float value = heightMap[width - x][height - y];
-
-                if (value >= borderVal)
-                    value = 0;
-                else
-                    value = (((1.45f - value) * 1000) - 21f) / 0.003f / 10000;
-
-
-                pixels[x + y * width] = new Color(value, value, value);
-            }
-        }
-
-
-
-
-        texture.SetPixels(pixels);
-        texture.wrapMode = TextureWrapMode.Clamp;
-        texture.Apply();
-
-        image.rectTransform.sizeDelta = new Vector2(width, 200);
-        image.texture = texture;
-
-    }
 }
-/*
- public static int TestCenterOfMass(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
-{
-
-
-
-    int width = heightMap.Count - 1;
-    int height = heightMap[0].Count - 1;
-
-    List<List<float>> localMas = new List<List<float>>();
-    List<Coord> listCoord = new List<Coord>();
-
-    string str = "";
-
-    for (int i = mas.Count - 1; i >= 0; i--)
-    {
-
-        localMas.Add(new List<float>());
-
-        for (int j = 0; j <= mas[i].Count - 1; j++)
-        {
-
-            float val = heightMap[minX + j][minY + i];
-
-            float valLeft = heightMap[minX + j - 1][minY + i];
-            float valRight = heightMap[minX + j + 1][minY + i];
-
-            float valTop = heightMap[minX + j][minY + i + 1];
-            float valBot = heightMap[minX + j][minY + i - 1];
-
-
-            float valTopLeft = heightMap[minX + j - 1][minY + i + 1];
-            float valTopRight = heightMap[minX + j + 1][minY + i + 1];
-
-
-            float valBotLeft = heightMap[minX + j - 1][minY + i - 1];
-            float valBotRight = heightMap[minX + j + 1][minY + i - 1];
-
-
-            //float power = (val * val + valLeft * valLeft + valRight * valRight + valTop * valTop + valBot * valBot+ valTopLeft * valTopLeft + valTopRight * valTopRight + valBotLeft * valBotLeft+ valBotRight * valBotRight);
-            //Math.Pow
-
-            float power = (val + valLeft + valRight + valTop + valBot + valTopLeft + valTopRight + valBotLeft + valBotRight) / 9;
-
-            //float power = MedialFilter(val, valLeft, valRight, valTop, valBot, valTopLeft, valTopRight, valBotLeft, valBotRight);                
-
-            power = (1.45f - power) * 20;
-
-            str += power;
-            str += " ";
-            localMas[mas.Count - 1 - i].Add(power);
-
-
-            //power -= 17.75f;
-
-            //if (power > 1f) {
-            //    power = 1f;
-            //}
-            //if (power < 0f)
-            //{
-            //    power = 0f;
-            //}
-            //if (power > 0.5f)
-            //{
-            //    power = 1 - power;
-            //}
-            //else {
-            //    power = 1 - power;
-            //}
-            //str += power;
-            //str += " ";
-
-            //
-
-            testCenterPix[minX + j + (minY + i) * width] = new Color(power, power, power);
-
-
-        }
-        str += "\n";
-
-    }
-
-
-
-    for (int i = 1; i < localMas.Count - 1; i++)
-    {
-        for (int j = 1; j < localMas[i].Count - 1; j++)
-        {
-            float val = localMas[i][j];
-
-            float valLeft = localMas[i - 1][j];
-            float valRight = localMas[i + 1][j];
-
-            float valTop = localMas[i][j + 1];
-            float valBot = localMas[i][j - 1];
-
-
-            float valTopLeft = localMas[i - 1][j + 1];
-            float valTopRight = localMas[i + 1][j + 1];
-
-
-            float valBotLeft = localMas[i - 1][j - 1];
-            float valBotRight = localMas[i + 1][j - 1];
-
-            //testCenterPix[minX + j + (minY + i) * width] = new Color(1f, 1f, 0f);
-            bool isFindInList = false;
-
-            foreach (Coord elem in listCoord)
-            {
-                if (Math.Abs(elem.x - j) <= 3 && Math.Abs(elem.y - i) <= 3)
-                    isFindInList = true;
-
-            }
-
-
-            if (val > valLeft &&
-           val > valRight &&
-           val > valTop &&
-           val > valBot &&
-           val > valTopLeft &&
-           val > valTopRight &&
-           val > valBotLeft &&
-           val > valBotRight &&
-           val > 0.15&&
-           !isFindInList)
-            {
-                CalcEgg.addSum();
-                testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 0f, 1f);
-                listCoord.Add(new Coord(j, i));
-            }
-
-        }
-
-
-    }
-    Debug.Log(@"/--------TestCenterOfMass---------\");
-    Debug.Log(str);
-    Debug.Log(@"\--------TestCenterOfMass---------/");
-
-
-
-
-
-
-
-    return 0;
-}
-*/
