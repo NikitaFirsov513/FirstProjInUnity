@@ -869,11 +869,16 @@ public class TextureGenerator : MonoBehaviour
             {
                 float val = localMas[i][j];
 
-
-                if (val >= listBright[maxK].val)
+                if (val >= 0.75f)
                     testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 1f, 1f);
                 else
                     testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
+
+
+                //if (val >= listBright[maxK].val)
+                //    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(1f, 1f, 1f);
+                //else
+                //    testCenterPix[(minX + j) + (minY + localMas.Count - 1 - i) * width] = new Color(0f, 0f, 0f);
 
             }
         }
