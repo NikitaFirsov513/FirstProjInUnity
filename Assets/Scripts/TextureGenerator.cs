@@ -704,10 +704,10 @@ public class TextureGenerator : MonoBehaviour
         //    string str = "";
         //    for (int j = 0; j <= mas[0].Count - 1; j++)
         //    {
-        //        str += heightMap[minX + j][minY + i] +" ";
+        //        str += heightMap[minX + j][minY + i] + " ";
 
         //    }
-        //    Debug.Log(str );
+        //    Debug.Log(str);
         //}
 
         FindEggByHeight(minX, minY, mas, heightMap);

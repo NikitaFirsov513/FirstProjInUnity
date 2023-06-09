@@ -24,7 +24,7 @@ public class ImageProcessing : MonoBehaviour
         initPixels.CopyTo(onePixels, 0);
         float maxValue = GlobalVar.getMinDistance();
 
-        onePixels = FindAllContour(heightMap, onePixels, maxValue, 1);
+        onePixels = FindAllContour(heightMap, onePixels, maxValue);
 
         SaveToPng(onePixels, "onePixels", width, height);
 
@@ -33,7 +33,9 @@ public class ImageProcessing : MonoBehaviour
         Color[] twoPixels = new Color[width * height];
         initPixels.CopyTo(twoPixels, 0);
 
-        twoPixels = FindAllContour(heightMap, twoPixels, maxValue, 2);
+        twoPixels = FindAllContour(heightMap, twoPixels, maxValue);
+        twoPixels = FindAllContour(heightMap, twoPixels, maxValue - 0.5f);
+
 
         SaveToPng(twoPixels, "twoPixels", width, height);
 
@@ -70,15 +72,16 @@ public class ImageProcessing : MonoBehaviour
                     heightMap[x + 2][y - 1] > maxValue)
                 {
 
-                    //pixels[x + y * width] = new Color(1f, 1f, 0);
+                    pixels[x + y * width] = new Color(1f, 1f, 0);
 
                     if (!findPix.Contains(x + ":" + y))
                     {
+                        pixels[x + y * width] = new Color(0, 1f, 0);
+
                         //доделать
-                        findPix = FindNextPix(heightMap, pixels, x, y, findPix,colOtsu);
+                        findPix = FindNextPix(heightMap, maxValue, pixels, x, y, findPix, colOtsu);
 
                     }
-
                 }
             }
         }
@@ -108,7 +111,7 @@ public class ImageProcessing : MonoBehaviour
     }
     //Генерация изначального изображения
 
-    public static string FindNextPix(List<List<float>> heightMap, Color[] pixels, int startX, int startY, string findPix, int colOtsu = 0)
+    public static string FindNextPix(List<List<float>> heightMap, float minDistance, Color[] pixels, int startX, int startY, string findPix, int colOtsu = 0)
     {
 
 
@@ -121,7 +124,6 @@ public class ImageProcessing : MonoBehaviour
         int countLoop = 0;
         int lastVector = 4;
 
-        float minDistance = GlobalVar.getMinDistance();
 
         var mas = new List<List<int>>();
         mas.Add(new List<int>());
@@ -608,16 +610,44 @@ public class ImageProcessing : MonoBehaviour
         Debug.Log(@"\--------MAS---------/");
 
 
-        for (int i = 0; i < colOtsu; i++)
+        Debug.Log(@"/--------DEBUG-MAS---------\");
+
+        for (int i = mas.Count - 1; i >= 0; i--)
         {
 
+            string str = "";
+            for (int j = 0; j <= mas[0].Count - 1; j++)
+            {
+                float power = heightMap[minX + j][minY + i];
 
+                power = (1.45f + GlobalVar.getNoise() - power) * 20;
 
+                str += power + " ";
 
-            //Вызов метода Оцу
-            MethodOtsu(minX, minY, mas, heightMap, pixels);
+            }
+            Debug.Log(str);
         }
+        Debug.Log(@"\--------DEBUG-MAS---------/");
 
+
+
+
+        //float maxValue = MethodOtsu(minX, minY, mas, heightMap, pixels);
+        //if (colOtsu != 0)
+        //    pixels = FindAllContour(heightMap, pixels, maxValue, --colOtsu);
+
+
+        //for (int i = 0; i < colOtsu; i++)
+        //{
+
+
+
+
+        //    //Вызов метода Оцу
+        //    MethodOtsu(minX, minY, mas, heightMap, pixels);
+        //}
+
+        MethodOtsu(minX, minY, mas, heightMap, pixels);
 
 
         //int S = CalcSquare(mas);
@@ -671,7 +701,7 @@ public class ImageProcessing : MonoBehaviour
 
 
     //изменить метод он не должен менять пиксели
-    public static int MethodOtsu(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
+    public static float MethodOtsu(int minX, int minY, List<List<int>> mas, List<List<float>> heightMap, Color[] testCenterPix)
     {
         List<List<float>> localMas = new List<List<float>>();
 
@@ -751,13 +781,7 @@ public class ImageProcessing : MonoBehaviour
 
             float o2b = P1k * P2k * (m1k - m2k) * (m1k - m2k);
 
-            Debug.Log("P1k>" + P1k);
-            Debug.Log("P2k>" + P2k);
 
-            Debug.Log("m1k>" + m1k);
-            Debug.Log("m2k>" + m2k);
-
-            Debug.Log("o2b>" + o2b);
 
             if (O2B < o2b)
             {
@@ -767,12 +791,7 @@ public class ImageProcessing : MonoBehaviour
 
         }
 
-        Debug.Log("MAX O2B>" + O2B);
-        Debug.Log("MAX K>" + maxK);
-        Debug.Log("VAL>" + listBright[maxK].val);
 
-
-        Debug.Log("ipiG>" + ipiG);
 
 
         for (int i = 0; i <= localMas.Count - 1; i++)
@@ -794,7 +813,7 @@ public class ImageProcessing : MonoBehaviour
             }
         }
 
-        return 0;
+        return listBright[maxK].val;
     }
 
 
