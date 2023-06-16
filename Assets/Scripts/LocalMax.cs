@@ -42,10 +42,15 @@ public class LocalMax : MonoBehaviour
             for (int x = 0; x <= width; x++)
             {
 
-
+                float value = heightMap[x][y];
 
                 if (heightMap[x][y] <= border)
                     continue;
+
+                if (width == 0)
+                {
+                    count += FindBorder(heightMap, border, x, y);
+                }
 
                 if (x == width && heightMap[x - 1][y] <= border)
                 {
@@ -56,6 +61,7 @@ public class LocalMax : MonoBehaviour
                 {
                     count += FindBorder(heightMap, border, x, y);
                 }
+
                 if (x == 0 && y != 0 && y != height)
                 {
                     if (heightMap[x + 1][y + 1] <= border &&
@@ -64,6 +70,7 @@ public class LocalMax : MonoBehaviour
                         count += FindBorder(heightMap, border, x, y);
                     }
                 }
+
                 if (x != 0 && x != width && y == 0)
                 {
                     if (heightMap[x - 1][y] <= border)
@@ -85,7 +92,7 @@ public class LocalMax : MonoBehaviour
                         count += FindBorder(heightMap, border, x, y);
                     }
                     //алгоритм нахождения пикселей
-                    count += FindBorder(heightMap, border, x, y);
+                    //count += FindBorder(heightMap, border, x, y);
                 }
             }
         }

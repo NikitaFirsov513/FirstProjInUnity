@@ -8,7 +8,7 @@ public class GlobalVar : MonoBehaviour
     //private static float borderVal = 1.416f;
 
 
-    private static float sensorUpdateDelay = 0.025f;
+    private static float sensorUpdateDelay = 0.033f;
 
     private static bool isSpawn = true;
 
@@ -17,7 +17,7 @@ public class GlobalVar : MonoBehaviour
 
     private static float distanceToConv = 1.45f;
 
-    private static float noise = 0.0030f;
+    private static float noise = 0.005f;
 
     public static float getMinDistance()
     {

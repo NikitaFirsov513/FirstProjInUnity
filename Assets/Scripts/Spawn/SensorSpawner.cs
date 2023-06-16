@@ -26,11 +26,11 @@ public class SensorSpawner : MonoBehaviour
         HeightMap.InitMass();
 
         for (int i = 0; i <= colBox; i++) {
-            GameObject sensorGameObj = Instantiate(sensor, new Vector3(positionX + SensorWidth.getWidth()*i, 3f, -8f), Quaternion.identity);
+            GameObject sensorGameObj = Instantiate(sensor, new Vector3(positionX + SensorWidth.getWidth()*i, 1.65f, -8f), Quaternion.identity);
             IResetable isad = sensorGameObj.GetComponent<IResetable>();
             isad.AddMas(i);
             sensorGameObj.transform.Rotate(90f, 0f, 0f);
-            sensorGameObj.transform.localScale = new Vector3(SensorWidth.getWidth(), 0.2f, 0.2f);
+            sensorGameObj.transform.localScale = new Vector3(SensorWidth.getWidth(), 0.02f, 0.02f);
             sensorStack.Push(sensorGameObj);
         }
 

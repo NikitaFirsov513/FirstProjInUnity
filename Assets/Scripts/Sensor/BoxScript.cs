@@ -28,12 +28,15 @@ public class BoxScript : MonoBehaviour, IResetable
         nextUpdate = Time.time + GlobalVar.getSensorUpdateDelay();
 
 
-        Ray ray = new Ray(transform.position, transform.forward * 1.5f);
-        Debug.DrawRay(transform.position, transform.forward * 1.5f, Color.blue);
+        Ray ray = new Ray(transform.position, transform.forward * 0.15f);
+        Debug.DrawRay(transform.position, transform.forward * 0.15f, Color.blue);
         RaycastHit hit;
 
-        if (!Physics.Raycast(ray, out hit, 1.5f))
+        if (!Physics.Raycast(ray, out hit, 0.45f))
             return;
+        
+        //
+        //Debug.Log(hit.distance);
         float randomScale = Random.Range(-GlobalVar.getNoise(), GlobalVar.getNoise());
 
         mas.Add(hit.distance + randomScale);
@@ -47,6 +50,9 @@ public class BoxScript : MonoBehaviour, IResetable
             HeightMap.CheckSensors();
         }
 
+
+        if (hit.collider.gameObject.GetInstanceID() == -1268)
+            return;
 
         float val = mas[mas.Count - 1];
 

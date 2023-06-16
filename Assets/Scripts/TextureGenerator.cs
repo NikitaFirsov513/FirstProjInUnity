@@ -1328,7 +1328,7 @@ public class TextureGenerator : MonoBehaviour
                 if (value >= borderVal)
                     value = 0;
                 else
-                    value = (((1.45f - value) * 1000) - 21f) / 0.003f / 10000;
+                    value = (((0.10f - value) * 1000) - 21f) / 0.003f / 10000;
 
 
                 pixels[x + y * width] = new Color(value, value, value);
