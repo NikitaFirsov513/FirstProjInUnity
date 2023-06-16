@@ -28,9 +28,12 @@ public class HeightMap : MonoBehaviour
 
             int count = reader.ReadInt32();
             int iteration = reader.ReadInt32();
+            int col = reader.ReadInt32();
+
             float update = (float)reader.ReadSingle();
             float width = (float)reader.ReadSingle();
-            Debug.Log($"count: {count}  iteration: {iteration}  update: {update}  width: {width}");
+
+            Debug.Log($"count: {count}  iteration: {iteration}  col: {col}  update: {update}  width: {width}");
 
             for (int j = 0; j < iteration - 1; j++)
             {
@@ -53,6 +56,8 @@ public class HeightMap : MonoBehaviour
             writer.Write(heightMap.Count);
             //количество опросов.
             writer.Write(heightMap[0].Count);
+            //количество яиц
+            writer.Write(CalcEgg.getEggSpawnCol());
             //частота обновления.
             writer.Write(GlobalVar.getSensorUpdateDelay());
             //ширина конвеера
