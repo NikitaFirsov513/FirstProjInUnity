@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,7 +12,14 @@ public class HeightMap : MonoBehaviour
 
     private static List<List<float>> heightMap;
 
-
+    struct OutData
+    {
+        public int count;
+        public int iteration;
+        public int col;
+        public float update;
+        public float width;
+    }
 
 
 
@@ -52,8 +60,10 @@ public class HeightMap : MonoBehaviour
 
         using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.OpenOrCreate)))
         {
+
+
             //количество датчиков.
-            writer.Write(heightMap.Count);
+            /*writer.Write(heightMap.Count);
             //количество опросов.
             writer.Write(heightMap[0].Count);
             //количество €иц
@@ -62,7 +72,18 @@ public class HeightMap : MonoBehaviour
             writer.Write(GlobalVar.getSensorUpdateDelay());
             //ширина конвеера
             writer.Write(ConvWidthScript.getWidth());
+            */
 
+
+            OutData outData = new OutData();
+            outData.count = heightMap.Count;
+            outData.iteration = heightMap[0].Count;
+            outData.col = CalcEgg.getEggSpawnCol();
+            outData.update = GlobalVar.getSensorUpdateDelay();
+            outData.width = ConvWidthScript.getWidth();
+            
+
+            //writer.Write(outData,);
 
             for (int j = 0; j < heightMap[0].Count - 1; j++)
             {
