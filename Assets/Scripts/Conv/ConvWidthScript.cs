@@ -6,7 +6,7 @@ public class ConvWidthScript : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    private static float width = 1.5f;
+    private static float width = 1.2f;
 
 
     public static float getWidth(){

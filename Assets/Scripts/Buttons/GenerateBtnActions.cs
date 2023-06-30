@@ -8,7 +8,7 @@ public class GenerateBtnActions : MonoBehaviour
     public void generate()
     {
         HeightMap.WriteFile();
-        HeightMap.ReadFile();
+        //HeightMap.ReadFile();
         //TextureGenerator.GetTexture(HeightMap.getMass());
         //ImageProcessing.Start(HeightMap.getMass());
         //LocalMax.Start(HeightMap.getMass());

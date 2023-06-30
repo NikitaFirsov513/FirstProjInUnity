@@ -640,7 +640,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.2
+  m_Text: '0
+
+'
 --- !u!222 &177046333
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5777,7 +5779,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0.2
+  m_Text: '0
+
+'
 --- !u!222 &1974853933
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6321,8 +6325,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   go: {fileID: 3711697915795479555, guid: 0e79c5020c1266943b7d263d89f009e0, type: 3}
-  spawnDelay: 0.5
-  spawnCol: 5
+  spawnDelay: 1
+  spawnCol: 1
 --- !u!4 &2127496332
 Transform:
   m_ObjectHideFlags: 0

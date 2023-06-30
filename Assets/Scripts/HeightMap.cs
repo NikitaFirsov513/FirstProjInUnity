@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
 
 public class HeightMap : MonoBehaviour
 {
@@ -12,13 +15,22 @@ public class HeightMap : MonoBehaviour
 
     private static List<List<float>> heightMap;
 
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     struct OutData
-    {
+    {   //количество датчиков (кол)
         public int count;
+        //количество обновлений (кол)
         public int iteration;
+        //количество €иц (шт)
         public int col;
+        //частота обновлени€ (0,033 в юнити) 
         public float update;
+        //ширина конвеера (м)
         public float width;
+        //рассто€ние ло конвеера (м)
+        public float distanceToConv;
+        //шум (м)
+        public float noise;
     }
 
 
@@ -35,13 +47,18 @@ public class HeightMap : MonoBehaviour
 
 
             int count = reader.ReadInt32();
+            Debug.Log($"count: {count}");
+
             int iteration = reader.ReadInt32();
             int col = reader.ReadInt32();
 
             float update = (float)reader.ReadSingle();
             float width = (float)reader.ReadSingle();
 
-            Debug.Log($"count: {count}  iteration: {iteration}  col: {col}  update: {update}  width: {width}");
+            float distanceToConv = (float)reader.ReadSingle();
+            float noise = (float)reader.ReadSingle();
+
+            Debug.Log($"count: {count}  iteration: {iteration}  col: {col}  update: {update}  width: {width}  distanceToConv: {distanceToConv}  noise: {noise}");
 
             for (int j = 0; j < iteration - 1; j++)
             {
@@ -50,6 +67,7 @@ public class HeightMap : MonoBehaviour
                     Debug.Log((float)reader.ReadSingle());
                 }
             }
+
         }
     }
     public static void WriteFile()
@@ -62,26 +80,31 @@ public class HeightMap : MonoBehaviour
         {
 
 
-            //количество датчиков.
-            /*writer.Write(heightMap.Count);
-            //количество опросов.
-            writer.Write(heightMap[0].Count);
-            //количество €иц
-            writer.Write(CalcEgg.getEggSpawnCol());
-            //частота обновлени€.
-            writer.Write(GlobalVar.getSensorUpdateDelay());
-            //ширина конвеера
-            writer.Write(ConvWidthScript.getWidth());
-            */
 
 
-            OutData outData = new OutData();
+
+            float distanceToConv = 0.1f;
+
+            var outData = new OutData();
+
             outData.count = heightMap.Count;
             outData.iteration = heightMap[0].Count;
             outData.col = CalcEgg.getEggSpawnCol();
+
             outData.update = GlobalVar.getSensorUpdateDelay();
             outData.width = ConvWidthScript.getWidth();
-            
+            outData.distanceToConv = distanceToConv;
+            outData.noise = GlobalVar.getNoise();
+
+            var size = Marshal.SizeOf(outData);
+            var buffer = new byte[size];
+            var ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(outData, ptr, true);
+            Marshal.Copy(ptr, buffer, 0, size);
+            Marshal.FreeHGlobal(ptr);
+
+            writer.Write(buffer);
+
 
             //writer.Write(outData,);
 
@@ -92,9 +115,12 @@ public class HeightMap : MonoBehaviour
                     writer.Write((float)heightMap[i][j]);
                 }
             }
+
+
+
+
             Debug.Log("File has been written");
         }
-
     }
 
     public static void InitMass()

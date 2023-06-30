@@ -17,7 +17,7 @@ public class GlobalVar : MonoBehaviour
 
     private static float distanceToConv = 1.45f;
 
-    private static float noise = 0.005f;
+    private static float noise = 0.000001f;
 
     public static float getMinDistance()
     {
@@ -28,29 +28,30 @@ public class GlobalVar : MonoBehaviour
     {
         return distanceToConv;
     }
-    
+
     public static float getNoise()
     {
         return noise;
     }
-    
+
     public static void setBorderVal(float a)
     {
         borderVal = a;
     }
-    
+
     public static float getBorderVal()
     {
         return borderVal;
     }
-    
-    public static void ToggleIsSpawn() {
-        isSpawn = !isSpawn;    
+
+    public static void ToggleIsSpawn()
+    {
+        isSpawn = !isSpawn;
     }
-    
+
     public static bool GetIsSpawn()
     {
-       return isSpawn;
+        return isSpawn;
     }
 
     public static float getSensorUpdateDelay()
@@ -68,7 +69,7 @@ public class GlobalVar : MonoBehaviour
     }
 
     public static void DicSensorUpdateDelay(float newVar)
-    {   
+    {
         sensorUpdateDelay -= newVar;
         Time.fixedDeltaTime = sensorUpdateDelay;
         //SpeedConv.setSpeedConv(sensorUpdateDelay);
