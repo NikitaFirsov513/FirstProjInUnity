@@ -96,6 +96,8 @@ public class HeightMap : MonoBehaviour
             outData.distanceToConv = distanceToConv;
             outData.noise = GlobalVar.getNoise();
 
+
+
             var size = Marshal.SizeOf(outData);
             var buffer = new byte[size];
             var ptr = Marshal.AllocHGlobal(size);
@@ -116,7 +118,7 @@ public class HeightMap : MonoBehaviour
                 }
             }
 
-
+            writer.Close();
 
 
             Debug.Log("File has been written");

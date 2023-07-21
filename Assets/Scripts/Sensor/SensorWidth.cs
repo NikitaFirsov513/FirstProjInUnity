@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class SensorWidth : MonoBehaviour
 {
-    private static float width = 0.005f;
+    //private static float width = 0.005f;
+    //007
+    private static float width = 0.006f;
+    //private static float width = 0.008f;
+    //private static float width = 0.01f;
 
     public static float getWidth(){
         return width;

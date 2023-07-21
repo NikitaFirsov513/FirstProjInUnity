@@ -22,7 +22,7 @@ public class TextColEgg : MonoBehaviour
 
     public void RefreshTextField()
     {
-        textField.text = CalcEgg.getSum().ToString();
+        //textField.text = CalcEgg.getSum().ToString();
         textEggSpawnCol.text = CalcEgg.getEggSpawnCol().ToString();
     }
 }
